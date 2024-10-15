@@ -1,7 +1,7 @@
 # COSC441
 Block programming in VR for a COSC441 research project. Made in Unity. 
 
-## Preparing Unity for git 
+## Preparing Unity for Git 
 https://stackoverflow.com/questions/21573405/how-to-prepare-a-unity-project-for-git-step-by-step
 
 ## Pull Requests 
