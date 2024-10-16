@@ -8,6 +8,8 @@ https://stackoverflow.com/questions/21573405/how-to-prepare-a-unity-project-for-
 
 Should have work done explained via bullet points. 
 
+Two people to review each PR. Code reviews are not important, just determine if the PR actually works and does not result in any errors. 
+
 ## Merging: 
 
 Fixing merge issues is up to the creator of the PR.
