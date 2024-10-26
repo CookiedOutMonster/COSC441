@@ -12,6 +12,7 @@ public abstract class VariableBlock : Block
     // Properties for variable block; set in derived classes
     public string Value { get; protected set; }
     public VariableType VariableType { get; protected set; }
+    public override Color BlockColor => Color.blue;
 
     private void Start()
     {

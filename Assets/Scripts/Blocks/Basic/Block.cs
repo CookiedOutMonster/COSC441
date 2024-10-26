@@ -20,6 +20,7 @@ public abstract class Block : MonoBehaviour, IBlock
 {
     // Property to define the category of the block
     public BlockType Type { get; protected set; }
+     public abstract Color BlockColor { get; }
 
     // Abstract methods to be implemented by each specific block class
     public abstract void Spawn();

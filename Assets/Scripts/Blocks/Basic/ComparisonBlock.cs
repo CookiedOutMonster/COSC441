@@ -13,6 +13,7 @@ public abstract class ComparisonBlock : Block
 {
     // Property for Comparison type; set in derived classes
     public ComparisonType ComparisonType { get; protected set; }
+    public override Color BlockColor => Color.purple;
 
     private void Start()
     {

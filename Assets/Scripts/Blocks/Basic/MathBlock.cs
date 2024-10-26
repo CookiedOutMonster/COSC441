@@ -11,6 +11,7 @@ public abstract class MathBlock : Block
 {
     // Property for Math Operation type
     public MathOperation MathOperation { get; protected set; }
+    public override Color BlockColor => Color.green;
 
     private void Start()
     {
