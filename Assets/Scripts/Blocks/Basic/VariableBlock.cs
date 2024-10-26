@@ -1,6 +1,13 @@
 using UnityEngine;
 
-public abstract class VariableBlock : Block, IVariableBlock
+     public enum VariableType
+    {
+        Boolean,
+        Float,
+        Integer,
+        String
+    }
+public abstract class VariableBlock : Block
 {
     // Properties for variable block; set in derived classes
     public string Value { get; protected set; }

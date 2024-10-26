@@ -1,6 +1,11 @@
 using UnityEngine;
-
-public abstract class BoolAlgBlock : Block, IBoolAlgBlock
+     public enum BooleanOperation
+    {
+        And,
+        Or,
+        Not
+    }
+public abstract class BoolAlgBlock : Block
 {
     // Property for Boolean operation; set in derived classes
     public BooleanOperator BooleanOperator { get; protected set; }

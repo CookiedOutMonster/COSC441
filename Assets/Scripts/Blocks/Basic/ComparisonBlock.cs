@@ -1,6 +1,15 @@
 using UnityEngine;
-
-public abstract class ComparisonBlock : Block, IComparisonBlock
+     public enum ComparisonType
+    {
+        NotEqual,
+        Equal,
+        LessThan,
+        LessThanEqual,
+        GreaterThan,
+        GreaterThanEqual
+        
+    }
+public abstract class ComparisonBlock : Block
 {
     // Property for Comparison type; set in derived classes
     public ComparisonType ComparisonType { get; protected set; }

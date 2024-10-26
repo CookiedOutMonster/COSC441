@@ -1,6 +1,10 @@
 using UnityEngine;
-
-public abstract class AssignmentBlock : Block, IAssignmentBlock
+     public enum AssignmentType
+    {
+        Equals,
+        NotEquals
+    }
+public abstract class AssignmentBlock : Block
 {
     // Property for Assignment type; set in derived classes
     public AssignmentType AssignmentType { get; protected set; }

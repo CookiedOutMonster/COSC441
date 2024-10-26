@@ -4,7 +4,18 @@ public class GreaterThanEqualBlock : ComparisonBlock
 {
     private void Start()
     {
-        Type = BlockType.ComparisonBlock;
         ComparisonType = ComparisonType.GreaterThanEqual;
+        Spawn();
+    }
+    public override void Spawn()
+    {
+        base.Spawn();
+        Debug.Log("Spawning Greater Than or Equal Comparison Block");
+    }
+
+    public override void Delete()
+    {
+        base.Delete();
+        Debug.Log("Deleting Greater Than or Equal Comparison Block");
     }
 }

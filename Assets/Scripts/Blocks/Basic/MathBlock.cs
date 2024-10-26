@@ -1,6 +1,13 @@
 using UnityEngine;
 
-public abstract class MathBlock : Block, IMathBlock
+    public enum MathOperation
+    {
+        Addition,
+        Subtraction,
+        Multiplication,
+        Division
+    }
+public abstract class MathBlock : Block
 {
     // Property for Math Operation type
     public MathOperation MathOperation { get; protected set; }
