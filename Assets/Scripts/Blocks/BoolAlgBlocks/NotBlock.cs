@@ -5,7 +5,7 @@ public class NotBlock : BoolAlgBlock
 {
     private void Start()
     {
-        BooleanOperator = BooleanOperator.Not;
+        BooleanOperation = BooleanOperation.Not;
         Spawn();
     }
     public override void Spawn()

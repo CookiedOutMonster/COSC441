@@ -8,7 +8,7 @@ using UnityEngine;
 public abstract class BoolAlgBlock : Block
 {
     // Property for Boolean operation; set in derived classes
-    public BooleanOperator BooleanOperator { get; protected set; }
+    public BooleanOperation BooleanOperation { get; protected set; }
     public override Color BlockColor => Color.yellow;
 
     private void Start()

@@ -5,7 +5,7 @@ public class AndBlock : BoolAlgBlock
 {
     private void Start()
     {
-        BooleanOperator = BooleanOperator.And;
+        BooleanOperation = BooleanOperation.And;
         Spawn();
     }
     public override void Spawn()

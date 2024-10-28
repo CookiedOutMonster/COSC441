@@ -5,7 +5,7 @@ public class NotEqualsBlock : AssignmentBlock
 {
     private void Start()
     {
-        AssignmentType = AssignmentType.NotEqual;
+        AssignmentType = AssignmentType.NotEquals;
         Spawn();
     }
     public override void Spawn()

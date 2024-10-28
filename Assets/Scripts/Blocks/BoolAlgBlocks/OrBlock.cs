@@ -6,7 +6,7 @@ public class OrBlock : BoolAlgBlock
 {
     private void Start()
     {
-        BooleanOperator = BooleanOperator.Or;
+        BooleanOperation = BooleanOperation.Or;
         Spawn();
     }
     public override void Spawn()
