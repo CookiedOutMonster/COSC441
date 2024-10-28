@@ -21,6 +21,11 @@ public abstract class VariableBlock : Block
 
     public override void Spawn()
     {
+        Renderer renderer = gameObject.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = BlockColor;
+        }
         // Common spawn logic for variable blocks (if any)
     }
 

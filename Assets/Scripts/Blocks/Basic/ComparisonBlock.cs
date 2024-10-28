@@ -22,6 +22,11 @@ public abstract class ComparisonBlock : Block
 
     public override void Spawn()
     {
+        Renderer renderer = gameObject.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = BlockColor;
+        }
         // Common spawn logic for comparison blocks (if any)
     }
 

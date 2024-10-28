@@ -4,11 +4,14 @@ using UnityEngine;
         And,
         Or,
         Not
-    }
+}
+
 public abstract class BoolAlgBlock : Block
 {
     // Property for Boolean operation; set in derived classes
     public BooleanOperation BooleanOperation { get; protected set; }
+
+    // Default color, can be overridden in derived classes
     public override Color BlockColor => Color.yellow;
 
     private void Start()
@@ -18,11 +21,18 @@ public abstract class BoolAlgBlock : Block
 
     public override void Spawn()
     {
-        // Common spawn logic for boolean logic blocks (if any)
+        // Set color on spawn
+        Renderer renderer = gameObject.GetComponent<Renderer>();
+        if (renderer != null)
+        {
+            renderer.material.color = BlockColor;
+        }
+
+        // Common spawn logic for boolean logic blocks
     }
 
     public override void Delete()
     {
-        // Common delete logic for boolean logic blocks (if any)
+        // Common delete logic for boolean logic blocks
     }
 }
