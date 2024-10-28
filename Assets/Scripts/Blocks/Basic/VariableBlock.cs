@@ -13,6 +13,7 @@ public abstract class VariableBlock : Block
     public string Value { get; protected set; }
     public VariableType VariableType { get; protected set; }
     public override Color BlockColor => Color.blue;
+    protected override string Symbol => "?";
 
     private void Start()
     {
@@ -26,6 +27,7 @@ public abstract class VariableBlock : Block
         {
             renderer.material.color = BlockColor;
         }
+        AddSymbolToSides();
         // Common spawn logic for variable blocks (if any)
     }
 

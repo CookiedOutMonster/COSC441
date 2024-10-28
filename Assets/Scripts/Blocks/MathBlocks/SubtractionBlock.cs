@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class SubtractionBlock : MathBlock
 {
+    protected override string Symbol => "-";
     private void Start()
     {
         MathOperation = MathOperation.Subtraction;

@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class GreaterThanBlock : ComparisonBlock
 {
+    protected override string Symbol => ">";
     private void Start()
     {
         ComparisonType = ComparisonType.GreaterThan;

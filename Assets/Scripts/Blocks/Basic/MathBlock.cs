@@ -12,6 +12,7 @@ public abstract class MathBlock : Block
     // Property for Math Operation type
     public MathOperation MathOperation { get; protected set; }
     public override Color BlockColor => Color.green;
+    protected override string Symbol => "?";
 
     private void Start()
     {
@@ -25,6 +26,7 @@ public abstract class MathBlock : Block
         {
             renderer.material.color = BlockColor;
         }
+        AddSymbolToSides();
         // Common spawn logic for math blocks (if any)
     }
 

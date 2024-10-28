@@ -13,6 +13,7 @@ public abstract class BoolAlgBlock : Block
 
     // Default color, can be overridden in derived classes
     public override Color BlockColor => Color.yellow;
+    protected override string Symbol => "?";
 
     private void Start()
     {
@@ -28,6 +29,7 @@ public abstract class BoolAlgBlock : Block
             renderer.material.color = BlockColor;
         }
 
+        AddSymbolToSides();
         // Common spawn logic for boolean logic blocks
     }
 

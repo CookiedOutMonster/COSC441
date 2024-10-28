@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class AdditionBlock : MathBlock
 {
+    protected override string Symbol => "+";
     private void Start()
     {
         MathOperation = MathOperation.Addition;

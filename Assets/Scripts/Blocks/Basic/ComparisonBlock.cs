@@ -14,6 +14,7 @@ public abstract class ComparisonBlock : Block
     // Property for Comparison type; set in derived classes
     public ComparisonType ComparisonType { get; protected set; }
     public override Color BlockColor => Color.magenta;
+    protected override string Symbol => "?";
 
     private void Start()
     {
@@ -27,6 +28,7 @@ public abstract class ComparisonBlock : Block
         {
             renderer.material.color = BlockColor;
         }
+        AddSymbolToSides();
         // Common spawn logic for comparison blocks (if any)
     }
 

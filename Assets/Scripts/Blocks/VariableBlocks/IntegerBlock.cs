@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class IntegerVariableBlock : VariableBlock
 {
+    protected override string Symbol => Value;
     private void Start()
     {
         VariableType = VariableType.Integer;

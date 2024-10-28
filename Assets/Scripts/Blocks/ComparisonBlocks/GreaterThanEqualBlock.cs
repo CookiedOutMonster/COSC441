@@ -2,6 +2,7 @@ using UnityEngine;
 
 public class GreaterThanEqualBlock : ComparisonBlock
 {
+    protected override string Symbol => ">=";
     private void Start()
     {
         ComparisonType = ComparisonType.GreaterThanEqual;

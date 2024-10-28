@@ -3,6 +3,7 @@ using UnityEngine;
 
 public class NotEqualsBlock : AssignmentBlock
 {
+    protected override string Symbol => "!";
     private void Start()
     {
         AssignmentType = AssignmentType.NotEquals;
