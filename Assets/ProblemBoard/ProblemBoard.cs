@@ -17,7 +17,7 @@ public class ProblemBoard : MonoBehaviour
         readProblemsFromTextFile();
         displayProblem(currProblem);
 
-        testNextProblem();
+        getSolutionStack(currProblem);
     }
 
     // Update is called once per frame
@@ -80,7 +80,7 @@ public class ProblemBoard : MonoBehaviour
     * Method description:
     * Advances to next problem, if exists, and updates display. If participant's currProblem is last problem in the set, displays msg indicating completion
     * To be used by submit/skip button logic
-     */
+    */
     public void nextProblem()
     {
         // if there's at least one problem remaining (not last one)
@@ -96,4 +96,34 @@ public class ProblemBoard : MonoBehaviour
         // update display
         displayProblem(currProblem);
     }
+
+    /*
+    * Method description:
+    * Returns the solution for a given problem (specify by id param) as a stack, to be compared against the participant's stack
+    * 
+    * Notes:
+    * This method will likely change based on how we want the solution stack to be formatted/how the blocks end up being set up.
+    * General idea should stay same though
+    */
+    public Stack<string> getSolutionStack(int id)
+    {
+        Stack<string> solnStack = new Stack<string>();
+        string[] solnBlocks = solutions[id].Split(", ");
+
+        for (int i = 0; i < solnBlocks.Length; i++)
+        {
+            solnStack.Push(solnBlocks[i]);
+        }
+
+        return solnStack;
+    }
+
+    /*
+    * Getter for currProblem, which is an index value/id that corresponds to a problem statement and its solution.
+    */
+    public int getCurrProblem()
+    {
+        return currProblem;
+    }
+
 }
