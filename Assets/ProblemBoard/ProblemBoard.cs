@@ -16,8 +16,6 @@ public class ProblemBoard : MonoBehaviour
     {
         readProblemsFromTextFile();
         displayProblem(currProblem);
-
-        getSolutionStack(currProblem);
     }
 
     // Update is called once per frame
