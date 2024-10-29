@@ -1,17 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using TMPro;
 using UnityEngine;
 
 public class ProblemBoard : MonoBehaviour
 {
     private string[] problems;
     private string[] solutions;
+    private int currProblem = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
         readProblemsFromTextFile();
+        displayProblem(currProblem);
     }
 
     // Update is called once per frame
@@ -22,7 +26,7 @@ public class ProblemBoard : MonoBehaviour
 
     /*
     * Method description: 
-    * Read in any # of problem statements and corresponding solution stacks from .txt file
+    * Read in any # of problem statements and corresponding solutions from .txt file
     * 
     * Assumptions:
     * First line = # of problems
@@ -49,5 +53,15 @@ public class ProblemBoard : MonoBehaviour
         }
 
         reader.Close();
+    }
+
+    /*
+    * Method description:
+    * Displays a given problem (specify by id param, where 1st problem in file is 0) on the whiteboard
+    */
+    private void displayProblem(int id)
+    {
+        TextMeshProUGUI whiteboardLabel = this.gameObject.GetComponent<TextMeshProUGUI>();
+        whiteboardLabel.SetText(problems[id]);
     }
 }
