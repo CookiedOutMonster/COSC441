@@ -9,13 +9,15 @@ public class ProblemBoard : MonoBehaviour
     private string[] problems;
     private string[] solutions;
     private int currProblem = 0;
-
+    private const int PROBLEM_SET_COMPLETE = -1; // to be assigned to currProblem, indicates that participant has completed everything
 
     // Start is called before the first frame update
     void Start()
     {
         readProblemsFromTextFile();
         displayProblem(currProblem);
+
+        testNextProblem();
     }
 
     // Update is called once per frame
@@ -62,6 +64,36 @@ public class ProblemBoard : MonoBehaviour
     private void displayProblem(int id)
     {
         TextMeshProUGUI whiteboardLabel = this.gameObject.GetComponent<TextMeshProUGUI>();
-        whiteboardLabel.SetText(problems[id]);
+
+        if (id == PROBLEM_SET_COMPLETE)
+        {
+            whiteboardLabel.SetText("All tasks are now complete. Thank you for your participation.");
+        }
+        else
+        {
+            whiteboardLabel.SetText(problems[id]);
+        }
+
+    }
+
+    /*
+    * Method description:
+    * Advances to next problem, if exists, and updates display. If participant's currProblem is last problem in the set, displays msg indicating completion
+    * To be used by submit/skip button logic
+     */
+    public void nextProblem()
+    {
+        // if there's at least one problem remaining (not last one)
+        if (currProblem > PROBLEM_SET_COMPLETE && currProblem < problems.Length - 1)
+        {
+            currProblem++;
+        }
+        else
+        {
+            currProblem = PROBLEM_SET_COMPLETE;
+        }
+
+        // update display
+        displayProblem(currProblem);
     }
 }
