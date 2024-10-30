@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class NotEqualBlock : ComparisonBlock
 {
-    protected override string Symbol => "!=";
     private void Start()
     {
         ComparisonType = ComparisonType.NotEqual;

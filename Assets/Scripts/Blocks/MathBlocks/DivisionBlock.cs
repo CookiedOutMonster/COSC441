@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class DivisionBlock : MathBlock
 {
-    protected override string Symbol => "/";
     private void Start()
     {
         MathOperation = MathOperation.Division;

@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class MultiplicationBlock : MathBlock
 {
-    protected override string Symbol => "*";
     private void Start()
     {
         MathOperation = MathOperation.Multiplication;

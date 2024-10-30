@@ -19,11 +19,6 @@ public abstract class AssignmentBlock : Block
     public override void Spawn()
     {
         Renderer renderer = gameObject.GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            renderer.material.color = BlockColor;
-        }
-        AddSymbolToSides();
         // Common spawn logic for assignment blocks (if any)
     }
 

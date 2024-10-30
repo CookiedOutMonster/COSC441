@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class StringVariableBlock : VariableBlock
 {
-    protected override string Symbol => Value;
     private void Start()
     {
         VariableType = VariableType.String;

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class OrBlock : BoolAlgBlock
 {
-    protected override string Symbol => "|";
     private void Start()
     {
         BooleanOperation = BooleanOperation.Or;

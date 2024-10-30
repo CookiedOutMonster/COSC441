@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class EqualsBlock : AssignmentBlock
 {
-    protected override string Symbol => "=";
     private void Start()
     {
         AssignmentType = AssignmentType.Equals;

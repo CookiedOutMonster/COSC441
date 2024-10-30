@@ -2,7 +2,6 @@ using UnityEngine;
 
 public class FloatVariableBlock : VariableBlock
 {
-    protected override string Symbol => Value;
     private void Start()
     {
         VariableType = VariableType.Float;

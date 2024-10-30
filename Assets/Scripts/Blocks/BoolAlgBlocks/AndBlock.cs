@@ -3,7 +3,6 @@ using UnityEngine;
 
 public class AndBlock : BoolAlgBlock
 {
-    protected override string Symbol => "&";
     private void Start()
     {
         BooleanOperation = BooleanOperation.And;

@@ -13,8 +13,6 @@ public abstract class ComparisonBlock : Block
 {
     // Property for Comparison type; set in derived classes
     public ComparisonType ComparisonType { get; protected set; }
-    public override Color BlockColor => Color.magenta;
-    protected override string Symbol => "?";
 
     private void Start()
     {
@@ -24,12 +22,6 @@ public abstract class ComparisonBlock : Block
     public override void Spawn()
     {
         Renderer renderer = gameObject.GetComponent<Renderer>();
-        if (renderer != null)
-        {
-            renderer.material.color = BlockColor;
-        }
-        AddSymbolToSides();
-        // Common spawn logic for comparison blocks (if any)
     }
 
     public override void Delete()
