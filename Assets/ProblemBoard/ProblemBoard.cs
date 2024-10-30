@@ -119,9 +119,17 @@ public class ProblemBoard : MonoBehaviour
     /*
     * Getter for currProblem, which is an index value/id that corresponds to a problem statement and its solution.
     */
-    public int getCurrProblem()
+    public int getCurrProblemIndex()
     {
         return currProblem;
+    }
+
+    /*
+    * Getter for the actual text of the current problem that participant is working on.
+    */
+    public string getCurrProblemStatement()
+    {
+        return problems[currProblem];
     }
 
 }
