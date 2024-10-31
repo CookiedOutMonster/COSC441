@@ -1,0 +1,7 @@
+3
+Create an integer variable and assign it a value of 5.
+Var_Integer, Operator_Equals, Number_Five
+Write a program that calculates the area of a rectangle with length of 10 and width of 7. Store the calculated area in a variable.
+Var_Integer, Operator_Equals, Number_Ten, Var_Integer, Operator_Equals, Number_Seven, Var_Integer, Operator_Equals, Var_Integer, Operator_Multiply, Var_Integer
+Really long problem for testing how this looks visually blah blah blah blah blah a bunch of text this is so long wow so long so much text holy crap i wonder what this is going to look like on the whiteboard. So much text ahhhhh ahhhhhh testing 123 testing 123 testing 123 let's see how we do boys.
+Solution
