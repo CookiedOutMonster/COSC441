@@ -12,8 +12,9 @@ public abstract class MathBlock : Block
     // Property for Math Operation type
     public MathOperation MathOperation { get; protected set; }
 
-    private void Start()
+    protected void Start()
     {
+        base.Start();
         Type = BlockType.MathBlock;
     }
 

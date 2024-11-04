@@ -4,6 +4,7 @@ public class IntegerVariableBlock : VariableBlock
 {
     private void Start()
     {
+        base.Start();
         VariableType = VariableType.Integer;
         Value = "0";
         Spawn();

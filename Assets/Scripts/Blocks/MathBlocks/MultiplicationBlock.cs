@@ -4,6 +4,7 @@ public class MultiplicationBlock : MathBlock
 {
     private void Start()
     {
+        base.Start();
         MathOperation = MathOperation.Multiplication;
         Spawn();
     }

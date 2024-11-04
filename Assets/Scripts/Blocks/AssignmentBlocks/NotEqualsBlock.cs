@@ -5,6 +5,7 @@ public class NotEqualsBlock : AssignmentBlock
 {
     private void Start()
     {
+        base.Start();
         AssignmentType = AssignmentType.NotEquals;
         Spawn();
     }

@@ -4,6 +4,7 @@ public class BooleanVariableBlock : VariableBlock
 {
     private void Start()
     {
+        base.Start();
         VariableType = VariableType.Boolean;
         Value = "true";
         Spawn();

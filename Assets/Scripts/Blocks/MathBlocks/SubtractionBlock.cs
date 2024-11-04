@@ -4,6 +4,7 @@ public class SubtractionBlock : MathBlock
 {
     private void Start()
     {
+        base.Start();
         MathOperation = MathOperation.Subtraction;
         Spawn();
     }

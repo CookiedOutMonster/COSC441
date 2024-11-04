@@ -5,6 +5,7 @@ public class LessThanBlock : ComparisonBlock
 {
     private void Start()
     {
+        base.Start();
         ComparisonType = ComparisonType.LessThan;
         Spawn();
     }

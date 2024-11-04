@@ -5,6 +5,7 @@ public class EqualsBlock : AssignmentBlock
 {
     private void Start()
     {
+        base.Start();
         AssignmentType = AssignmentType.Equals;
         Spawn();
     }public override void Spawn()
