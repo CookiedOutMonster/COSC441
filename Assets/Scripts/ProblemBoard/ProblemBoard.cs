@@ -38,7 +38,7 @@ public class ProblemBoard : MonoBehaviour
     */
     private void readProblemsFromTextFile()
     {
-        const string FILE_PATH = "Assets/ProblemBoard/problemset.txt";
+        const string FILE_PATH = "Assets/Scripts/ProblemBoard/problemset.txt";
         StreamReader reader = new StreamReader(FILE_PATH);
 
         int NUM_PROBLEMS = int.Parse(reader.ReadLine());
