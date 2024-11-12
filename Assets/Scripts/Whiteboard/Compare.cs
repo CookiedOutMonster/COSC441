@@ -7,20 +7,32 @@ public class Compare : MonoBehaviour
 
     // get reference to the whiteboard for the solution stack 
     private ProblemBoard problemBoard;
+    private bool interpit;
 
     // Start is called before the first frame update
     void Start()
     {
-
         getProblemBoardRef();
         getSolutionStack();
-
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (interpit)
+        {
+            checkBlocksOnBoard();
+        }
+    }
 
+    public void setInterpit(bool interpit)
+    {
+        interpit = interpit;
+    }
+
+    public bool getInterpit()
+    {
+        return interpit;
     }
 
     private void getProblemBoardRef()
@@ -39,11 +51,27 @@ public class Compare : MonoBehaviour
         }
     }
 
-    private void getSolutionStack()
+    private Stack<string> getSolutionStack()
     {
         // retrieve problem's index in order to get correct stack from file 
         int index = problemBoard.getCurrProblemIndex();
         Stack<string> solutionStack = problemBoard.getSolutionStack(index);
-        Debug.Log(solutionStack);
+        return solutionStack;
+    }
+
+    // mock this method
+    private Stack<string> getBlocksOnBoard()
+    {
+
+    }
+
+    public bool checkBlocksOnBoard()
+    {
+        // call getBlocksOnBoard 
+        // call getSolutionStack() 
+        // compare them 
+        // yell at appropriate blocks 
+        // return true or false? 
+        return false;
     }
 }
