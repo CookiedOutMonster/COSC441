@@ -4,7 +4,7 @@ public class StringVariableBlock : VariableBlock
 {
     private void Start()
     {
-        base.Start()
+        base.Start();
         VariableType = VariableType.String;
         Value = "null";
         Spawn();
