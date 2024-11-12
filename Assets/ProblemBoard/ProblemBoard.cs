@@ -12,7 +12,7 @@ public class ProblemBoard : MonoBehaviour
     private const int PROBLEM_SET_COMPLETE = -1; // to be assigned to currProblem, indicates that participant has completed everything
 
     // Start is called before the first frame update
-    void Start()
+    void Awake()
     {
         readProblemsFromTextFile();
         displayProblem(currProblem);
