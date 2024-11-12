@@ -8,8 +8,6 @@ public abstract class AssignmentBlock : Block
 {
     // Property for Assignment type; set in derived classes
     public AssignmentType AssignmentType { get; protected set; }
-    public override Color BlockColor => Color.red;
-    protected override string Symbol => "?";
 
     private void Start()
     {
