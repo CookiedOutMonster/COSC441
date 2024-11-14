@@ -59,7 +59,7 @@ public class ProblemBoard : MonoBehaviour
     * Method description:
     * Displays a given problem (specify by id param, where 1st problem in file is 0) on the whiteboard
     */
-    private void displayProblem(int id)
+    public void displayProblem(int id) //updated to public for use in StudyBehavior
     {
         TextMeshProUGUI whiteboardLabel = this.gameObject.GetComponent<TextMeshProUGUI>();
 
@@ -131,5 +131,12 @@ public class ProblemBoard : MonoBehaviour
     {
         return problems[currProblem];
     }
+
+//getter to return total problems to ref in study behavior
+    public int GetTotalProblems() 
+{
+    return problems.Length;
+}
+
 
 }

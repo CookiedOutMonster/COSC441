@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -26,9 +27,10 @@ public class StudyBehavior : MonoBehaviour
     [SerializeField] private TextMeshProUGUI feedbackText; // displays feedback to participant 
 
     private float timer = 0f; 
+    private int currentTrialIndex = 0;
     private int wrongAnswerProvided = 0; //incorrect attempts   
     private bool isCorrect = false; 
-
+    private Stack<string> participantSolution = new Stack<string>(); // Stores participant solution
     private List<int> blockSequence = new List<int>(); 
 
     private string[] header = { //for storing data
@@ -86,7 +88,7 @@ public class StudyBehavior : MonoBehaviour
 
     public void immediate() //handles immediate feedback 
     {
-        TODO:
+       // TODO: figure out participant solutions besides novel implementation below
         Stack<string> participantSolution = GetParticipantSolution(); // Get participant solution 
         Stack<string> correctSolution = problemBoard.getSolutionStack(problemBoard.getCurrProblemIndex()); // Get solution ref to ProblemBoard
 
