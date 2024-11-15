@@ -4,11 +4,30 @@ using UnityEngine;
 
 public class BlockSpawner : MonoBehaviour
 {
-    /*
-     SerializeFields for generic block prefab
-    */
+    // block prefabs for each block type, which are assigned values via the inspector
+    public GameObject prefab_Int;
+    public GameObject prefab_Float;
+    public GameObject prefab_Bool;
+    public GameObject prefab_String;
 
-    public GameObject cubePrefab;
+    public GameObject prefab_Greater;
+    public GameObject prefab_Less;
+    public GameObject prefab_Equal;
+    public GameObject prefab_GreaterOrEqual;
+    public GameObject prefab_LessOrEqual;
+    public GameObject prefab_NotEqual;
+
+    public GameObject prefab_And;
+    public GameObject prefab_Or;
+    public GameObject prefab_Not;
+
+    public GameObject prefab_EqualsAssign;
+    public GameObject prefab_NotEqualAssign;
+
+    public GameObject prefab_Add;
+    public GameObject prefab_Subtract;
+    public GameObject prefab_Multiply;
+    public GameObject prefab_Divide;
 
 
     // Start is called before the first frame update
@@ -22,11 +41,12 @@ public class BlockSpawner : MonoBehaviour
     }
 
     /*
-        Pirvate method used to calculate an offset (to the left) of the spawn point to spawn the block. 
+        Private method used to calculate an offset (to the left) of the spawn point to spawn the block. 
     */
-    private Vector3 spawnBlockToTheLeft(){
+    private Vector3 spawnBlockToTheLeft()
+    {
         float scalar = 1.0f;
-        return (transform.position + (Vector3.left*scalar));
+        return (transform.position + (Vector3.left * scalar));
     }
 
     /*
@@ -42,23 +62,27 @@ public class BlockSpawner : MonoBehaviour
         For Variables 
     */
 
-    public void spawnInt(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnInt()
+    {
+        GameObject temp = Instantiate(prefab_Int, spawnBlockToTheLeft(), Quaternion.identity);
         IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
     }
 
-    public void spawnFloat(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnFloat()
+    {
+        GameObject temp = Instantiate(prefab_Float, spawnBlockToTheLeft(), Quaternion.identity);
         FloatVariableBlock type = temp.AddComponent<FloatVariableBlock>();
     }
-    
-    public void spawnBool(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+
+    public void spawnBool()
+    {
+        GameObject temp = Instantiate(prefab_Bool, spawnBlockToTheLeft(), Quaternion.identity);
         BooleanVariableBlock type = temp.AddComponent<BooleanVariableBlock>();
     }
 
-    public void spawnString(){ 
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnString()
+    {
+        GameObject temp = Instantiate(prefab_String, spawnBlockToTheLeft(), Quaternion.identity);
         StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
     }
 
@@ -66,34 +90,40 @@ public class BlockSpawner : MonoBehaviour
         For Comparison 
     */
 
-    public void spawnGreaterThan(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnGreaterThan()
+    {
+        GameObject temp = Instantiate(prefab_Greater, spawnBlockToTheLeft(), Quaternion.identity);
         GreaterThanBlock type = temp.AddComponent<GreaterThanBlock>();
     }
 
-    
-    public void spawnLessThan(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+
+    public void spawnLessThan()
+    {
+        GameObject temp = Instantiate(prefab_Less, spawnBlockToTheLeft(), Quaternion.identity);
         LessThanBlock type = temp.AddComponent<LessThanBlock>();
     }
 
-    public void spawnEqualTo(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnEqualTo()
+    {
+        GameObject temp = Instantiate(prefab_Equal, spawnBlockToTheLeft(), Quaternion.identity);
         EqualBlock type = temp.AddComponent<EqualBlock>();
     }
 
-    public void spawnGreaterThanOrEqual(){ 
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnGreaterThanOrEqual()
+    {
+        GameObject temp = Instantiate(prefab_GreaterOrEqual, spawnBlockToTheLeft(), Quaternion.identity);
         GreaterThanEqualBlock type = temp.AddComponent<GreaterThanEqualBlock>();
     }
 
-    public void spawnLessThanOrEqual(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnLessThanOrEqual()
+    {
+        GameObject temp = Instantiate(prefab_LessOrEqual, spawnBlockToTheLeft(), Quaternion.identity);
         LessThanEqualBlock type = temp.AddComponent<LessThanEqualBlock>();
     }
 
-    public void spawnNotEqual(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnNotEqual()
+    {
+        GameObject temp = Instantiate(prefab_NotEqual, spawnBlockToTheLeft(), Quaternion.identity);
         NotEqualBlock type = temp.AddComponent<NotEqualBlock>();
     }
 
@@ -101,59 +131,66 @@ public class BlockSpawner : MonoBehaviour
         For Boolean Algebra
     */
 
-    public void spawnAnd(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnAnd()
+    {
+        GameObject temp = Instantiate(prefab_And, spawnBlockToTheLeft(), Quaternion.identity);
         AndBlock type = temp.AddComponent<AndBlock>();
     }
 
-    public void spawnOr(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnOr()
+    {
+        GameObject temp = Instantiate(prefab_Or, spawnBlockToTheLeft(), Quaternion.identity);
         OrBlock type = temp.AddComponent<OrBlock>();
     }
 
-    public void spawnNot(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnNot()
+    {
+        GameObject temp = Instantiate(prefab_Not, spawnBlockToTheLeft(), Quaternion.identity);
         NotBlock type = temp.AddComponent<NotBlock>();
     }
 
     /*
-        For Assignment Operators 
+        For Assignment Operators
     */
 
-    public void spawnEqualsAssignment(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnEqualsAssignment()
+    {
+        GameObject temp = Instantiate(prefab_EqualsAssign, spawnBlockToTheLeft(), Quaternion.identity);
         EqualsBlock type = temp.AddComponent<EqualsBlock>();
     }
 
-    public void spawnNotEqualsAssignment(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnNotEqualsAssignment()
+    {
+        GameObject temp = Instantiate(prefab_NotEqualAssign, spawnBlockToTheLeft(), Quaternion.identity);
         NotEqualsBlock type = temp.AddComponent<NotEqualsBlock>();
     }
 
     /*
         For Math Operators
-    */ 
+    */
 
-    public void spawnAdd(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnAdd()
+    {
+        GameObject temp = Instantiate(prefab_Add, spawnBlockToTheLeft(), Quaternion.identity);
         AdditionBlock type = temp.AddComponent<AdditionBlock>();
     }
 
-    public void spawnSubtraction(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnSubtraction()
+    {
+        GameObject temp = Instantiate(prefab_Subtract, spawnBlockToTheLeft(), Quaternion.identity);
         SubtractionBlock type = temp.AddComponent<SubtractionBlock>();
     }
 
-    public void spawnMultiplaction(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnMultiplication()
+    {
+        GameObject temp = Instantiate(prefab_Multiply, spawnBlockToTheLeft(), Quaternion.identity);
         MultiplicationBlock type = temp.AddComponent<MultiplicationBlock>();
     }
 
-    public void spawnDivision(){
-        GameObject temp = Instantiate(cubePrefab, spawnBlockToTheLeft(), Quaternion.identity);
+    public void spawnDivision()
+    {
+        GameObject temp = Instantiate(prefab_Divide, spawnBlockToTheLeft(), Quaternion.identity);
         DivisionBlock type = temp.AddComponent<DivisionBlock>();
     }
-
-
 
 }
