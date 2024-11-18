@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,17 +6,13 @@ using UnityEngine;
 public class Compare : MonoBehaviour
 {
 
-    // get reference to the whiteboard for the solution stack 
+    // get reference to the problems for the solution stack 
     private ProblemBoard problemBoard;
-    private bool interpit;
-
-
 
     // Start is called before the first frame update
     void Awake()
     {
         getProblemBoardRef();
-        //getSolutionStack();
     }
 
     // Update is called once per frame
@@ -43,15 +40,34 @@ public class Compare : MonoBehaviour
 
     public bool checkBlocksOnBoard(Stack<GameObject> userStack, bool interpit)
     {
-        // Early return if the stack is empty
-        if (userStack.Count == 0)
-            return true;
+        Stack<GameObject> userCopy = DeepCopy(userStack);
 
         // stare at it until it makes sense (easy)
         if (interpit)
-            return interpitBlocksOnBoard(userStack);
+            return interpitBlocksOnBoard(userCopy);
         else
-            return compileBlocksOnBoard(userStack);
+            return compileBlocksOnBoard(userCopy);
+    }
+
+    // Generic function to deep copy a Stack<T>
+    private Stack<T> DeepCopy<T>(Stack<T> originalStack) where T : new()
+    {
+        // Create a new Stack to hold the copied items
+        Stack<T> copiedStack = new Stack<T>();
+
+        // Create a list to temporarily hold the items so we don't modify the original stack
+        List<T> tempList = new List<T>(originalStack);
+
+        // Iterate through the tempList (which contains the items in original stack's order)
+        foreach (T item in tempList)
+        {
+            // Create a new instance of T for each item and add it to the copied stack
+            T newItem = (T)Activator.CreateInstance(typeof(T));  // Create a new instance of T
+            copiedStack.Push(newItem);  // Push the new instance onto the copied stack
+        }
+
+        // Return the deep copied stack
+        return copiedStack;
     }
 
 
@@ -70,30 +86,60 @@ public class Compare : MonoBehaviour
 
         // iterate over the user supplied input only and compare 1:1 to the solution stack 
         while (revUser.Count > 0)
-        {
-            // retrieve reference to the block the user put in
-            GameObject block = revUser.Pop();
-            Block temp = block.GetComponent<Block>();
-            string userInput = temp.Type.ToString();
+            checkBlock(revUser, revSoln, errors);
 
-            // get the solution
-            string solution = revSoln.Pop();
-
-            if (solution != userInput)
-            {
-                // make the blocks freak! 
-                Debug.Log("solution = " + solution + " userInput " + userInput);
-                errors++;
-            }
-        }
         // return true if there are no errors in the code and the user has completed the question
         return errors == 0 && userStack.Count == revSoln.Count ? true : false;
     }
 
     private bool compileBlocksOnBoard(Stack<GameObject> userStack)
     {
-        Debug.Log("This was called!");
-        return false;
+
+        if (userStack.Count == 0)
+        {
+            Debug.Log("Problem is not finished!");
+            return false;
+        }
+
+        Stack<string> solnStack = getSolutionStack();
+
+        // @TODO user interaction if the problem is not done yet
+        if (userStack.Count != solnStack.Count)
+        {
+            // display a problem to the user
+            // TODO: Julia this is when the code needs an error for the user. 
+            // this might need some more finessing on my part due to my implementation.
+            // TODO Gerren cook on this 
+            Debug.Log("Problem is not finished!");
+            return false;
+        }
+
+        int errors = 0;
+
+        // compile
+        while (userStack.Count > 0)
+            checkBlock(userStack, solnStack, errors);
+
+        // return true if there are no errors and false if there are errors 
+        return errors == 0 ? true : false;
+    }
+
+    private void checkBlock(Stack<GameObject> userStack, Stack<string> solnStack, int errors)
+    {
+        // retrieve reference to the block the user put in
+        GameObject block = userStack.Pop();
+        Block temp = block.GetComponent<Block>();
+        string userInput = temp.Type.ToString();
+
+        // get the solution
+        string solution = solnStack.Pop();
+
+        if (solution != userInput)
+        {
+            // make the blocks freak! 
+            Debug.Log("solution =  " + solution + " userInput " + userInput);
+            errors++;
+        }
     }
 
     public static Stack<T> ReverseStack<T>(Stack<T> stack)
