@@ -16,6 +16,13 @@ public abstract class VariableBlock : Block
     private void Start()
     {
         Type = BlockType.VariableBlock;
+
+        
+    }
+    // Method to set the value
+    public void SetValue(string newValue)
+    {
+        Value = newValue;
     }
 
     public override void Spawn()

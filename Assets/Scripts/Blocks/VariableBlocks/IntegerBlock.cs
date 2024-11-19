@@ -5,9 +5,11 @@ public class IntegerVariableBlock : VariableBlock
     private void Start()
     {
         VariableType = VariableType.Integer;
-        Value = "0";
+        // Value = "0";
         Spawn();
     }
+
+ 
 
     public override void Spawn()
     {
