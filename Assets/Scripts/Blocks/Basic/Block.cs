@@ -5,7 +5,8 @@ public enum BlockType
     ComparisonBlock,
     BoolAlgBlock,
     AssignmentBlock,
-    MathBlock
+    MathBlock,
+    BooleanOperationNot
 }
 
 // Interface for general block functionality

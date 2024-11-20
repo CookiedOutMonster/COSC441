@@ -19,4 +19,9 @@ public class NotBlock : BoolAlgBlock
         base.Delete();
         Debug.Log("Deleting NOT Boolean Algebra Block");
     }
+
+    public void talk()
+    {
+        Debug.Log("What the fuck is a sonic");
+    }
 }

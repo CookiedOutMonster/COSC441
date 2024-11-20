@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Reflection;
 
 public class Compare : MonoBehaviour
 {
@@ -38,38 +39,15 @@ public class Compare : MonoBehaviour
     }
 
 
+    // @Todo return enum and not bool? 
     public bool checkBlocksOnBoard(Stack<GameObject> userStack, bool interpit)
     {
-        Stack<GameObject> userCopy = DeepCopy(userStack);
-
         // stare at it until it makes sense (easy)
         if (interpit)
-            return interpitBlocksOnBoard(userCopy);
+            return interpitBlocksOnBoard(userStack);
         else
-            return compileBlocksOnBoard(userCopy);
+            return compileBlocksOnBoard(userStack);
     }
-
-    // Generic function to deep copy a Stack<T>
-    private Stack<T> DeepCopy<T>(Stack<T> originalStack) where T : new()
-    {
-        // Create a new Stack to hold the copied items
-        Stack<T> copiedStack = new Stack<T>();
-
-        // Create a list to temporarily hold the items so we don't modify the original stack
-        List<T> tempList = new List<T>(originalStack);
-
-        // Iterate through the tempList (which contains the items in original stack's order)
-        foreach (T item in tempList)
-        {
-            // Create a new instance of T for each item and add it to the copied stack
-            T newItem = (T)Activator.CreateInstance(typeof(T));  // Create a new instance of T
-            copiedStack.Push(newItem);  // Push the new instance onto the copied stack
-        }
-
-        // Return the deep copied stack
-        return copiedStack;
-    }
-
 
     private bool interpitBlocksOnBoard(Stack<GameObject> userStack)
     {
@@ -79,17 +57,25 @@ public class Compare : MonoBehaviour
         // retrieve soln stack from problem-board
         Stack<string> solnStack = getSolutionStack();
 
+        int problemLength = solnStack.Count;
+        int inputLength = userStack.Count;
+
         // reverse both the user stack and the soln stack to compare one by one 
-        Stack<GameObject> revUser = ReverseStack(userStack);
+        //Stack<GameObject> revUser = ReverseStack(userStack);
         Stack<string> revSoln = ReverseStack(solnStack);
 
 
+
         // iterate over the user supplied input only and compare 1:1 to the solution stack 
-        while (revUser.Count > 0)
-            checkBlock(revUser, revSoln, errors);
+        while (userStack.Count > 0)
+            checkBlock(userStack, revSoln, errors);
 
         // return true if there are no errors in the code and the user has completed the question
-        return errors == 0 && userStack.Count == revSoln.Count ? true : false;
+
+        Debug.Log($"errors {errors}");
+
+
+        return errors == 0 && inputLength == problemLength && userStack.Count == 0 ? true : false;
     }
 
     private bool compileBlocksOnBoard(Stack<GameObject> userStack)
@@ -124,23 +110,38 @@ public class Compare : MonoBehaviour
         return errors == 0 ? true : false;
     }
 
-    private void checkBlock(Stack<GameObject> userStack, Stack<string> solnStack, int errors)
+    private void checkBlock(Stack<GameObject> userStack, Stack<string> solnStack, ref int errors)
     {
         // retrieve reference to the block the user put in
         GameObject block = userStack.Pop();
-        Block temp = block.GetComponent<Block>();
-        string userInput = temp.Type.ToString();
+        var blockComponent = GetBlockType(block);
+        //var method = cunt.GetMethod("talk");
 
         // get the solution
         string solution = solnStack.Pop();
+        string userInput = blockComponent.ToString();
 
         if (solution != userInput)
         {
             // make the blocks freak! 
-            Debug.Log("solution =  " + solution + " userInput " + userInput);
+            Debug.Log("Incorrect expected =  " + solution + " actual " + userInput);
             errors++;
+            Debug.Log(errors);
         }
+        else
+        {
+            Debug.Log("Correct expected =  " + solution + " actual " + userInput);
+        }
+
     }
+
+    private Type GetBlockType(GameObject block)
+    {
+        Block temp = block.gameObject.GetComponentInChildren<Block>(); // Get the Block component (could be derived class like BoolAlgBlock)
+        Type someBlock = temp.GetType(); // Get the actual type (e.g., BoolAlgBlock, VariableBlock, etc.)
+        return someBlock; // Return the Type (like BoolAlgBlock)
+    }
+
 
     public static Stack<T> ReverseStack<T>(Stack<T> stack)
     {

@@ -1,9 +1,9 @@
 using UnityEngine;
-     public enum BooleanOperation
-    {
-        And,
-        Or,
-        Not
+public enum BooleanOperation
+{
+    And,
+    Or,
+    Not
 }
 
 public abstract class BoolAlgBlock : Block

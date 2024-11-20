@@ -5,158 +5,139 @@ using System.Linq;
 public class Shelf : MonoBehaviour
 {
     [Header("Detection Settings")]
-    [SerializeField] private float detectionHeight = 0.1f; // Height above the shelf to detect blocks.
-    [SerializeField] private LayerMask blockLayer; // The layer mask for the blocks that are detectable.
-    [SerializeField] private float snapThreshold = 0.1f; // The distance threshold for snapping blocks to the surface.
-    [SerializeField] private Vector3 snapOffset = new Vector3(0, 0.5f, 0); // Offset applied when snapping the block to the surface.
+    [SerializeField] private float detectionHeight = 1f;
 
-    private BoxCollider rectangleCollider; // Reference to the BoxCollider attached to this object.
-    private List<Transform> detectedBlocks = new List<Transform>(); // List of blocks detected above the shelf.
+    [Header("Optional Snapping")]
+    [SerializeField] private bool enableSnapping = true;
+    [SerializeField] private float snapHeight = 0.1f;  // Height above shelf surface
+    [SerializeField] private float snapThreshold = 0.5f;  // How close block needs to be to snap
 
-  private void Start()
-    { 
-        rectangleCollider = GetComponent<BoxCollider>();
-        //Debug.Log(rectangleCollider);
-        //Debug.Log(rectangleCollider.bounds);
+    [Header("Debug")]
+    [SerializeField] private bool showDebugLogs;
+
+    private BoxCollider shelfCollider;
+    private List<Transform> detectedBlocks = new List<Transform>();
+    private Stack<GameObject> sortedBlocks = new Stack<GameObject>();
+
+    private void Start()
+    {
+        shelfCollider = GetComponent<BoxCollider>();
+        if (shelfCollider == null)
+        {
+            Debug.LogError("No BoxCollider found on " + gameObject.name);
+            return;
+        }
+
+        if (showDebugLogs) PrintDebugInfo();
     }
 
-    // Update method that runs every frame
+    private void PrintDebugInfo()
+    {
+        Debug.Log("=== Shelf Debug Info ===");
+        Debug.Log($"Shelf Position: {transform.position}");
+        Debug.Log($"Shelf Scale: {transform.lossyScale}");
+        Debug.Log($"Collider Size: {shelfCollider.size}");
+    }
+
     private void Update()
     {
-        DetectBlocksAbove(); // Detect blocks above the shelf.
-        //SnapBlocksToSurface(); // Snap detected blocks to the surface of the shelf.
-        //SortBlocksLeftToRight(); // Sort detected blocks from left to right.
-        //PrintOrderedBlocks(); // Print the list of sorted blocks (for debugging).
-    }
+        DetectBlocksAbove();
+        SortBlocksLeftToRight();
+        if (enableSnapping) SnapBlocksToShelf();
 
-    private void OnDrawGizmos()
-    {
-        if (rectangleCollider != null)
+        Stack<GameObject> arms = GetSortedBlocksLeftToRight();
+
+        if (showDebugLogs && sortedBlocks.Count > 0)
         {
-            // Get the bounds of the BoxCollider in world space
-            Bounds colliderBounds = rectangleCollider.bounds;
-
-            // Set the Gizmo color to red
-            Gizmos.color = Color.yellow;
-
-            // Draw the wireframe cube to visualize the BoxCollider bounds
-            Gizmos.DrawWireCube(colliderBounds.center, colliderBounds.size);
+            Debug.Log("Shelf Blocks from left to right:");
+            while (arms.Count > 0)
+            {
+                GameObject block = arms.Pop();
+                Debug.Log($"Shelf {block.name} at position {block.transform.position} eskeddit");
+            }
         }
     }
 
-    // Detect blocks above the shelf within the specified detection area.
     private void DetectBlocksAbove()
     {
-        detectedBlocks.Clear(); // Clear the previous list of detected blocks.
-        
-        // Calculate the detection bounds for the area above the shelf.
-        Bounds detectBounds = rectangleCollider.bounds;
-        detectBounds.center += Vector3.up * detectionHeight; // Offset the detection bounds upwards based on the detectionHeight.
-        
-        // Perform an OverlapBox check to detect colliders (blocks) in the defined bounds.
-        Collider[] hitColliders = Physics.OverlapBox(
-            detectBounds.center, // Center of the detection area.
-            detectBounds.extents, // Size of the detection area (half of the total width, height, and depth).
-            transform.rotation, // Rotation of the detection area (aligned with the shelf's rotation).
-            blockLayer // Only detect objects on the specified blockLayer.
+        detectedBlocks.Clear();
+
+        Vector3 shelfTop = transform.TransformPoint(shelfCollider.center);
+        shelfTop.y += (transform.lossyScale.y * shelfCollider.size.y * 0.5f);
+
+        Vector3 detectionCenter = shelfTop + (Vector3.up * detectionHeight * 0.5f);
+        Vector3 detectionSize = new Vector3(
+            transform.lossyScale.x * shelfCollider.size.x,
+            detectionHeight,
+            transform.lossyScale.z * shelfCollider.size.z
         );
 
-        // Iterate through the detected colliders and check if they are valid blocks above the shelf.
+        Collider[] hitColliders = Physics.OverlapBox(
+            detectionCenter,
+            detectionSize * 0.5f,
+            transform.rotation
+        );
+
         foreach (Collider col in hitColliders)
         {
-            //Debug.Log(col); // this prints out the name of the collider 
-            
-            // issue #1 is the block is not above the rectangle 
-            if (IsBlockAboveRectangle(col.transform)) // Check if the block is above the shelf's rectangle.
-            {
-                Debug.Log(col);
-                detectedBlocks.Add(col.transform); // Add the block to the list of detected blocks.
-            }
-            else
-            {
-                //Debug.Log("we are here");
-            }
-            
+            if (col.transform == transform) continue;
+            detectedBlocks.Add(col.transform);
         }
     }
 
-    // Check if a given block is above the shelf's rectangle area.
-    private bool IsBlockAboveRectangle(Transform block)
-    {
-        // get position of block 
-        Vector3 blockPosition = block.position;
-        
-        // Convert block position to the local space of the shelf to check if it's within the bounds.
-        Vector3 localPos = transform.InverseTransformPoint(blockPosition);
-        Bounds localBounds = rectangleCollider.bounds;
-
-        Debug.Log(localBounds);
-
-        localBounds.center = transform.InverseTransformPoint(localBounds.center);
-
-        //Debug.Log(localPos);
-        // Check if the block is inside the shelf's rectangle bounds (on the X and Z axes) and above it on the Y axis.
-        bool isAbove = Mathf.Abs(localPos.x) <= localBounds.extents.x &&
-                    Mathf.Abs(localPos.z) <= localBounds.extents.z &&
-                    blockPosition.y > transform.position.y;
-
-        Debug.Log($"Block Above Rectangle: {isAbove}");
-
-        return isAbove;
-    }
-
-    // Snap detected blocks to the shelf's surface within a defined threshold.
-    private void SnapBlocksToSurface()
-    {
-        foreach (Transform block in detectedBlocks)
-        {
-            Vector3 targetPosition = new Vector3(
-                block.position.x, // Keep the X position unchanged.
-                transform.position.y + snapOffset.y, // Adjust the Y position based on the snapOffset.
-                block.position.z // Keep the Z position unchanged.
-            );
-
-            // If the block is within the snapping threshold, snap it to the target position.
-            if (Vector3.Distance(block.position, targetPosition) <= snapThreshold)
-            {
-                Debug.Log("This happened");
-                block.position = targetPosition;
-            }
-            else
-            {
-                Debug.Log("Snapping did not happen");
-            }
-        }
-    }
-
-    // Sort the detected blocks from left to right based on their X position in local space.
     private void SortBlocksLeftToRight()
     {
-        // Sort the blocks based on their local X position (relative to the shelf).
-        detectedBlocks = detectedBlocks
-            .OrderBy(block => transform.InverseTransformPoint(block.position).x)
-            .ToList();
+        sortedBlocks = new Stack<GameObject>(
+            detectedBlocks
+                .OrderBy(block =>
+                {
+                    Vector3 localPos = transform.InverseTransformPoint(block.gameObject.transform.position);
+                    return localPos.x;
+                })
+                .Select(block => block.gameObject)
+                .Reverse()
+        );
+    }
 
-        // Now detectedBlocks contains blocks ordered from left to right in local space.
-        // Optionally, you can perform further processing on the sorted blocks here.
-        for (int i = 0; i < detectedBlocks.Count; i++)
+    private void SnapBlocksToShelf()
+    {
+        Vector3 shelfTop = transform.TransformPoint(shelfCollider.center);
+        shelfTop.y += (transform.lossyScale.y * shelfCollider.size.y * 0.5f);
+        float snapY = shelfTop.y + snapHeight;
+
+        foreach (Transform block in detectedBlocks)
         {
-            Transform block = detectedBlocks[i];
-            // You can access the block's components or properties here for further processing.
-            // Example: block.GetComponent<BlockProperties>()
+            Vector3 blockPos = block.position;
+            if (Mathf.Abs(blockPos.y - snapY) <= snapThreshold)
+            {
+                // Only snap the Y position, maintain X and Z
+                block.position = new Vector3(blockPos.x, snapY, blockPos.z);
+            }
         }
     }
 
-    // Public method to get the list of ordered blocks.
-    public List<Transform> GetOrderedBlocks()
+    // Public methods for external access
+    public List<Transform> GetDetectedBlocks()
     {
-        return new List<Transform>(detectedBlocks); // Return a copy of the list of ordered blocks.
+        return new List<Transform>(detectedBlocks);
     }
-    
-    // Code to print the number of ordered blocks (for debugging purposes).
-    public void PrintOrderedBlocks()
+
+    public Stack<GameObject> GetSortedBlocksLeftToRight()
     {
-        List<Transform> blocks = GetOrderedBlocks(); // Get the ordered blocks.
-        Debug.Log(blocks.Count); // Print the number of ordered blocks in the debug console.
+        return new Stack<GameObject>(new Stack<GameObject>(sortedBlocks));
     }
+
+    public int GetBlockCount()
+    {
+        return sortedBlocks.Count;
+    }
+
+    /*
+    public Transform GetBlockAtIndex(int index)
+    {
+        if (index >= 0 && index < sortedBlocks.Count)
+            return sortedBlocks[index];
+        return null;
+    }
+    */
 }
