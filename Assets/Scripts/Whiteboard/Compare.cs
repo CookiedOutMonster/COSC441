@@ -68,7 +68,7 @@ public class Compare : MonoBehaviour
 
         // iterate over the user supplied input only and compare 1:1 to the solution stack 
         while (userStack.Count > 0)
-            checkBlock(userStack, revSoln, errors);
+            checkBlock(userStack, revSoln, ref errors);
 
         // return true if there are no errors in the code and the user has completed the question
 
@@ -104,7 +104,7 @@ public class Compare : MonoBehaviour
 
         // compile
         while (userStack.Count > 0)
-            checkBlock(userStack, solnStack, errors);
+            checkBlock(userStack, solnStack, ref errors);
 
         // return true if there are no errors and false if there are errors 
         return errors == 0 ? true : false;
