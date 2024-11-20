@@ -64,17 +64,11 @@ public class Compare : MonoBehaviour
         //Stack<GameObject> revUser = ReverseStack(userStack);
         Stack<string> revSoln = ReverseStack(solnStack);
 
-
-
         // iterate over the user supplied input only and compare 1:1 to the solution stack 
         while (userStack.Count > 0)
             checkBlock(userStack, revSoln, ref errors);
 
         // return true if there are no errors in the code and the user has completed the question
-
-        Debug.Log($"errors {errors}");
-
-
         return errors == 0 && inputLength == problemLength && userStack.Count == 0 ? true : false;
     }
 
@@ -126,13 +120,7 @@ public class Compare : MonoBehaviour
             // make the blocks freak! 
             Debug.Log("Incorrect expected =  " + solution + " actual " + userInput);
             errors++;
-            Debug.Log(errors);
         }
-        else
-        {
-            Debug.Log("Correct expected =  " + solution + " actual " + userInput);
-        }
-
     }
 
     private Type GetBlockType(GameObject block)
