@@ -13,8 +13,9 @@ public abstract class VariableBlock : Block
     public string Value { get; protected set; }
     public VariableType VariableType { get; protected set; }
 
-    private void Start()
+    protected void Start()
     {
+        base.Start();
         Type = BlockType.VariableBlock;
     }
 

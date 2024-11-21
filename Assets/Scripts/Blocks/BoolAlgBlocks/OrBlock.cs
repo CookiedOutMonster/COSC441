@@ -6,6 +6,7 @@ public class OrBlock : BoolAlgBlock
 {
     private void Start()
     {
+        base.Start();
         BooleanOperation = BooleanOperation.Or;
         Spawn();
     }

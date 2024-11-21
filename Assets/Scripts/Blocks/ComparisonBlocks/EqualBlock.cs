@@ -5,6 +5,7 @@ public class EqualBlock : ComparisonBlock
 {
     private void Start()
     {
+        base.Start();
         ComparisonType = ComparisonType.Equal;
         Spawn();
     }

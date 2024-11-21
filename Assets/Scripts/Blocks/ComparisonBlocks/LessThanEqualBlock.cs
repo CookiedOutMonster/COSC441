@@ -4,6 +4,7 @@ public class LessThanEqualBlock : ComparisonBlock
 {
     private void Start()
     {
+        base.Start();
         ComparisonType = ComparisonType.LessThanEqual;
         Spawn();
     }

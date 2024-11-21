@@ -5,6 +5,7 @@ public class NotBlock : BoolAlgBlock
 {
     private void Start()
     {
+        base.Start();
         BooleanOperation = BooleanOperation.Not;
         Spawn();
     }

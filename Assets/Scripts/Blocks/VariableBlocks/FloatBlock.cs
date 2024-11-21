@@ -4,6 +4,7 @@ public class FloatVariableBlock : VariableBlock
 {
     private void Start()
     {
+        base.Start();
         VariableType = VariableType.Float;
         Value = "0.00";
         Spawn();
