@@ -4,6 +4,7 @@ public class NotEqualBlock : ComparisonBlock
 {
     private void Start()
     {
+        base.Start();
         ComparisonType = ComparisonType.NotEqual;
         Spawn();
     }

@@ -14,8 +14,9 @@ public abstract class ComparisonBlock : Block
     // Property for Comparison type; set in derived classes
     public ComparisonType ComparisonType { get; protected set; }
 
-    private void Start()
+    protected void Start()
     {
+        base.Start();
         Type = BlockType.ComparisonBlock;
     }
 

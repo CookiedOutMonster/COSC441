@@ -4,6 +4,7 @@ public class GreaterThanEqualBlock : ComparisonBlock
 {
     private void Start()
     {
+        base.Start();
         ComparisonType = ComparisonType.GreaterThanEqual;
         Spawn();
     }

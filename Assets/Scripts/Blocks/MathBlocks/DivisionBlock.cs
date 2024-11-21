@@ -4,6 +4,7 @@ public class DivisionBlock : MathBlock
 {
     private void Start()
     {
+        base.Start();
         MathOperation = MathOperation.Division;
         Spawn();
     }

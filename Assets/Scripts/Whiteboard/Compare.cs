@@ -49,9 +49,6 @@ public class Compare : MonoBehaviour
     // @Todo return enum and not bool? 
     public bool checkBlocksOnBoard(Stack<GameObject> userStack, bool interpit, ref int errors)
     {
-
-        Debug.Log(interpit);
-
         // stare at it until it makes sense (easy)
         if (interpit && IsStackDifferent(userStack))
             return interpitBlocksOnBoard(userStack, ref errors);
@@ -152,12 +149,16 @@ public class Compare : MonoBehaviour
     {
         // retrieve reference to the block the user put in
         GameObject block = userStack.Pop();
+
+        // This is done because of the way that the blocks are programmed. I needed to get the "child" on the fly, which is why there is that
+        // GetBlockType() there. If it were me, I would not have done that. 
+        Block grandDaddy = block.GetComponent<Block>();
         var blockComponent = GetBlockType(block);
-        //var method = cunt.GetMethod("talk");
 
         // get the solution
         string solution = solnStack.Pop();
         string userInput = blockComponent.ToString();
+
 
         if (printErrors)
         {
@@ -166,10 +167,16 @@ public class Compare : MonoBehaviour
 
         // check by removing spaces for both and ignoring caps (just in case!)
         // be wary of the ! operator <- sneaky! 
-        if (!(string.Equals(solution.Replace(" ", ""), userInput.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)))
+        if ((string.Equals(solution.Replace(" ", ""), userInput.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)) == false)
         {
             // make the blocks freak! 
+            grandDaddy.False();
             errors++;
+        }
+
+        else if (((string.Equals(solution.Replace(" ", ""), userInput.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)) == true))
+        {
+            grandDaddy.Correct();
         }
     }
 

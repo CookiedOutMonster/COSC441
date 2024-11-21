@@ -5,6 +5,7 @@ public class GreaterThanBlock : ComparisonBlock
 {
     private void Start()
     {
+        base.Start();
         ComparisonType = ComparisonType.GreaterThan;
         Spawn();
     }

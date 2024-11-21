@@ -11,8 +11,9 @@ public abstract class BoolAlgBlock : Block
     // Property for Boolean operation; set in derived classes
     public BooleanOperation BooleanOperation { get; protected set; }
 
-    private void Start()
+    protected void Start()
     {
+        base.Start();
         Type = BlockType.BoolAlgBlock;
     }
 

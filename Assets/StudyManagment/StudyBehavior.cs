@@ -43,6 +43,7 @@ public class StudyBehavior : MonoBehaviour
     private void Awake()
     {
         getProblemBoardRef();
+        CSVManager.SetFilePath("cunt");
     }
 
     private void Start()
@@ -104,6 +105,8 @@ public class StudyBehavior : MonoBehaviour
         // ProvideFeedback(""); // Clear previous feedback
     }
 
+    /*
+    // don't care about this method tbh 
     public void immediate() //handles immediate feedback 
     {
         // TODO: figure out participant solutions besides novel implementation below
@@ -164,18 +167,20 @@ public class StudyBehavior : MonoBehaviour
         feedbackText.text = message; // Display feedback if needed
     }
 
+    */
+
     private void LogHeader()
     {
         CSVManager.AppendToCSV(header);
     }
 
-    private void LogData()
+    public void LogData(int totalErrors)
     {
         string[] data = {
             studySettings.participantID.ToString(),
             studySettings.feedbackType.ToString(),
             timer.ToString(),
-            wrongAnswerProvided.ToString()
+            totalErrors.ToString()
         };
 
         CSVManager.AppendToCSV(data);

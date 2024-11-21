@@ -118,6 +118,7 @@ public class Executor : MonoBehaviour
             // Hiding appropriate menus
             HideInterpitScreen();
             ShowCorrectNextScreen(); // i want to play a sound here lol
+            std.LogData(totalErrors);
             // log data 
         }
         else if (!isCorrect && feedBackType == FeedbackType.ImmediateFeedback)
