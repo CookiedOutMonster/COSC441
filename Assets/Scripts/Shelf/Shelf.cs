@@ -129,8 +129,10 @@ public class Shelf : MonoBehaviour
 
     public int GetBlockCount()
     {
-        return sortedBlocks.Count;
+        return detectedBlocks.Count;
     }
+
+
 
     /*
     public Transform GetBlockAtIndex(int index)

@@ -7,6 +7,13 @@ using System.Reflection;
 public class Compare : MonoBehaviour
 {
 
+    // ~ for debugging 
+    private bool printErrors = false;
+
+    // used for interpit 
+    private Stack<GameObject> lastVerifiedStack = null;
+
+
     // get reference to the problems for the solution stack 
     private ProblemBoard problemBoard;
 
@@ -40,19 +47,55 @@ public class Compare : MonoBehaviour
 
 
     // @Todo return enum and not bool? 
-    public bool checkBlocksOnBoard(Stack<GameObject> userStack, bool interpit)
+    public bool checkBlocksOnBoard(Stack<GameObject> userStack, bool interpit, ref int errors)
     {
+
+        Debug.Log(interpit);
+
         // stare at it until it makes sense (easy)
-        if (interpit)
-            return interpitBlocksOnBoard(userStack);
+        if (interpit && IsStackDifferent(userStack))
+            return interpitBlocksOnBoard(userStack, ref errors);
+        else if (!interpit && IsStackDifferent(userStack))
+            return compileBlocksOnBoard(userStack, ref errors);
         else
-            return compileBlocksOnBoard(userStack);
+            return false;
     }
 
-    private bool interpitBlocksOnBoard(Stack<GameObject> userStack)
+    // not confident in this approach 
+    private bool IsStackDifferent(Stack<GameObject> currentStack)
     {
+        // First check
+        if (lastVerifiedStack == null)
+        {
+            lastVerifiedStack = new Stack<GameObject>(currentStack);
+            return true;
+        }
 
-        int errors = 0;
+        // Compare stack counts
+        if (currentStack.Count != lastVerifiedStack.Count)
+        {
+            lastVerifiedStack = new Stack<GameObject>(currentStack);
+            return true;
+        }
+
+        // Compare each block
+        var currentArray = currentStack.ToArray();
+        var lastArray = lastVerifiedStack.ToArray();
+
+        for (int i = 0; i < currentArray.Length; i++)
+        {
+            if (currentArray[i] != lastArray[i])
+            {
+                lastVerifiedStack = new Stack<GameObject>(currentStack);
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private bool interpitBlocksOnBoard(Stack<GameObject> userStack, ref int errors)
+    {
 
         // retrieve soln stack from problem-board
         Stack<string> solnStack = getSolutionStack();
@@ -64,6 +107,9 @@ public class Compare : MonoBehaviour
         //Stack<GameObject> revUser = ReverseStack(userStack);
         Stack<string> revSoln = ReverseStack(solnStack);
 
+        if (printErrors)
+            Debug.Log("Count = " + userStack.Count);
+
         // iterate over the user supplied input only and compare 1:1 to the solution stack 
         while (userStack.Count > 0)
             checkBlock(userStack, revSoln, ref errors);
@@ -72,7 +118,7 @@ public class Compare : MonoBehaviour
         return errors == 0 && inputLength == problemLength && userStack.Count == 0 ? true : false;
     }
 
-    private bool compileBlocksOnBoard(Stack<GameObject> userStack)
+    private bool compileBlocksOnBoard(Stack<GameObject> userStack, ref int errors)
     {
 
         if (userStack.Count == 0)
@@ -94,8 +140,6 @@ public class Compare : MonoBehaviour
             return false;
         }
 
-        int errors = 0;
-
         // compile
         while (userStack.Count > 0)
             checkBlock(userStack, solnStack, ref errors);
@@ -115,10 +159,16 @@ public class Compare : MonoBehaviour
         string solution = solnStack.Pop();
         string userInput = blockComponent.ToString();
 
-        if (solution != userInput)
+        if (printErrors)
+        {
+            Debug.Log($"userinput = {userInput} solution = {solution}");
+        }
+
+        // check by removing spaces for both and ignoring caps (just in case!)
+        // be wary of the ! operator <- sneaky! 
+        if (!(string.Equals(solution.Replace(" ", ""), userInput.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)))
         {
             // make the blocks freak! 
-            Debug.Log("Incorrect expected =  " + solution + " actual " + userInput);
             errors++;
         }
     }
@@ -129,7 +179,6 @@ public class Compare : MonoBehaviour
         Type someBlock = temp.GetType(); // Get the actual type (e.g., BoolAlgBlock, VariableBlock, etc.)
         return someBlock; // Return the Type (like BoolAlgBlock)
     }
-
 
     public static Stack<T> ReverseStack<T>(Stack<T> stack)
     {
@@ -144,7 +193,6 @@ public class Compare : MonoBehaviour
 
         return rev;
     }
-
 
     private Stack<string> getSolutionStack()
     {

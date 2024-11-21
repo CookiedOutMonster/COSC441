@@ -15,7 +15,6 @@ public class ProblemBoard : MonoBehaviour
     void Awake()
     {
         readProblemsFromTextFile();
-        displayProblem(currProblem);
     }
 
     // Update is called once per frame
@@ -58,6 +57,7 @@ public class ProblemBoard : MonoBehaviour
     /*
     * Method description:
     * Displays a given problem (specify by id param, where 1st problem in file is 0) on the whiteboard
+    * @TODO MIGHT HAFT TO RETURN FALSE OR SOME SHIT IF THE PROBLEM IS DONE
     */
     public void displayProblem(int id) //updated to public for use in StudyBehavior
     {
@@ -132,11 +132,11 @@ public class ProblemBoard : MonoBehaviour
         return problems[currProblem];
     }
 
-//getter to return total problems to ref in study behavior
-    public int GetTotalProblems() 
-{
-    return problems.Length;
-}
+    //getter to return total problems to ref in study behavior
+    public int GetTotalProblems()
+    {
+        return problems.Length;
+    }
 
 
 }
