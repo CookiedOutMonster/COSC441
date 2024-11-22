@@ -1,4 +1,11 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
+guid: cb38d62bd4c129748ac55ba8bfa60522
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences: []
+=======
 guid: 90874cf898e73524f850f5927276000c
 MonoImporter:
   externalObjects: {}
@@ -23,6 +30,7 @@ MonoImporter:
   - prefab_Subtract: {instanceID: 0}
   - prefab_Multiply: {instanceID: 0}
   - prefab_Divide: {instanceID: 0}
+>>>>>>> main
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
