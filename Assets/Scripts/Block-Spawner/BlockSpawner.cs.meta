@@ -1,9 +1,36 @@
 fileFormatVersion: 2
+<<<<<<< HEAD
 guid: cb38d62bd4c129748ac55ba8bfa60522
 MonoImporter:
   externalObjects: {}
   serializedVersion: 2
   defaultReferences: []
+=======
+guid: 90874cf898e73524f850f5927276000c
+MonoImporter:
+  externalObjects: {}
+  serializedVersion: 2
+  defaultReferences:
+  - prefab_Int: {fileID: 5197613455868127838, guid: 0db1d9a5df5eb304b87c1d81504f380f, type: 3}
+  - prefab_Float: {instanceID: 0}
+  - prefab_Bool: {instanceID: 0}
+  - prefab_String: {instanceID: 0}
+  - prefab_Greater: {instanceID: 0}
+  - prefab_Less: {instanceID: 0}
+  - prefab_Equal: {instanceID: 0}
+  - prefab_GreaterOrEqual: {instanceID: 0}
+  - prefab_LessOrEqual: {instanceID: 0}
+  - prefab_NotEqual: {instanceID: 0}
+  - prefab_And: {instanceID: 0}
+  - prefab_Or: {instanceID: 0}
+  - prefab_Not: {instanceID: 0}
+  - prefab_EqualsAssign: {instanceID: 0}
+  - prefab_NotEqualAssign: {instanceID: 0}
+  - prefab_Add: {instanceID: 0}
+  - prefab_Subtract: {instanceID: 0}
+  - prefab_Multiply: {instanceID: 0}
+  - prefab_Divide: {instanceID: 0}
+>>>>>>> main
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 
