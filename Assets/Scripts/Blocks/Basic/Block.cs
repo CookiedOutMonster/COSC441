@@ -1,13 +1,28 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
+/*
+VarTypeBlock: declare a variable and set its type (int, float, string, bool), that's it
+ComparisonBlock: !=, ==, <, >, >=, <=
+BoolAlgBlock: and &, or |, not !
+AssignmentBlock: =, !=
+MathBlock: +, -, *, /
+
+StringValBlock: text value to be assigned to a String VarTypeBlock 
+NumberValBlock: number to be assigned to an Int or Float VarTypeBlock
+BooleanValBlock: true/false value, to be assigned to a Bool VarTypeBlock
+*/
 public enum BlockType
 {
-    VariableBlock,
+    VarTypeBlock,
     ComparisonBlock,
     BoolAlgBlock,
     AssignmentBlock,
-    MathBlock
+    MathBlock,
+    StringValBlock,
+    NumberValBlock,
+    BooleanValBlock
 }
 
 public interface IBlock
@@ -56,6 +71,17 @@ public abstract class Block : MonoBehaviour, IBlock
         if (falseSound == null)
         {
             Debug.LogError("False sound not found at path: " + falseSoundPath);
+        }
+
+        if (EditorUtility.DisplayDialog("Test", "Correct or false?", "Correct", "False"))
+        {
+            Debug.Log("test Correct() method");
+            this.Correct();
+        }
+        else
+        {
+            Debug.Log("test False() method");
+            this.False();
         }
     }
 
