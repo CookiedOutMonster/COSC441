@@ -26,19 +26,24 @@ public class StudyBehavior : MonoBehaviour
     [SerializeField] private StudySettings studySettings;
     [SerializeField] private TextMeshProUGUI feedbackText; // displays feedback to participant 
 
-    private float timer = 0f;
+    // for time 
+    private float trialTimer = 0f;
+    private bool hasStarted = false;
+
     private int currentTrialIndex = 0;
     private int wrongAnswerProvided = 0; //incorrect attempts   
     private bool isCorrect = false;
     private Stack<string> participantSolution = new Stack<string>(); // Stores participant solution
     private List<int> blockSequence = new List<int>();
 
-    private string[] header = { //for storing data
-        "PID",
-        "FeedbackType",
-        "ResponseTime",
-        "IncorrectSubmissions"
+    private string[] header = {
+    "PID",
+    "FeedbackType",
+    "ResponseTime",
+    "IncorrectSubmissions",
+    "ProblemDifficulty"
     };
+
 
     private void Awake()
     {
@@ -50,18 +55,16 @@ public class StudyBehavior : MonoBehaviour
     {
         //LogHeader(); //logs above header for data
         CreateBlock(); //creates data block
+        LogHeader();
         //newTrial(); //starts trial
     }
 
     private void Update()
     {
-        // boolean flag to start the timer 
-        /*
-        if (!isCorrect) //tracks time until correct solution
+        if (hasStarted)
         {
-            timer += Time.deltaTime;
+            trialTimer += Time.deltaTime;
         }
-        */
     }
 
     public FeedbackType GetFeedbackType()
@@ -97,13 +100,29 @@ public class StudyBehavior : MonoBehaviour
 
         problemBoard.displayProblem(problemIndex); // Displays problem 
 
-        timer = 0f; // Reset timer for new trial
         wrongAnswerProvided = 0; // Reset incorrect attempts
         isCorrect = false; // Reset correct status
 
         currentTrialIndex++; // Move next trial index
-        // ProvideFeedback(""); // Clear previous feedback
+
+        hasStarted = true;
+        trialTimer = 0f; // Reset timer
     }
+
+    private string DetermineProblemDifficulty(int problemIndex)
+    {
+        int blockCount = problemBoard.getSolutionStack(problemIndex).Count;
+
+        if (blockCount >= 1 && blockCount <= 3)
+            return "Easy";
+        else if (blockCount >= 4 && blockCount <= 6)
+            return "Medium";
+        else if (blockCount >= 7 && blockCount <= 10)
+            return "Hard";
+        else
+            return "Unknown";
+    }
+
 
     /*
     // don't care about this method tbh 
@@ -176,11 +195,14 @@ public class StudyBehavior : MonoBehaviour
 
     public void LogData(int totalErrors)
     {
+        hasStarted = false; // Stop the timer
+
         string[] data = {
             studySettings.participantID.ToString(),
             studySettings.feedbackType.ToString(),
-            timer.ToString(),
-            totalErrors.ToString()
+            trialTimer.ToString(), // Use the tracked trial timer
+            totalErrors.ToString(),
+            DetermineProblemDifficulty(currentTrialIndex - 1) // Use previous trial index
         };
 
         CSVManager.AppendToCSV(data);

@@ -21,6 +21,9 @@ public class Shelf : MonoBehaviour
     private List<Transform> detectedBlocks = new List<Transform>();  // List of blocks currently detected above the shelf
     private Stack<GameObject> sortedBlocks = new Stack<GameObject>();  // Stack to store sorted blocks from left to right
 
+    private List<Transform> previousDetectedBlocks = new List<Transform>();
+
+
     private void Start()
     {
         // Get the BoxCollider attached to the shelf object
@@ -46,8 +49,41 @@ public class Shelf : MonoBehaviour
 
     private void Update()
     {
-        // Detect blocks that are above the shelf
         DetectBlocksAbove();
+
+        // Create a new list to track blocks to reset, avoiding modification during iteration
+        List<Transform> blocksToReset = new List<Transform>();
+
+        // Compare current blocks with previous blocks
+        foreach (Transform block in previousDetectedBlocks)
+        {
+            // Check if the block is not null and still exists
+            if (block != null && block.gameObject != null)
+            {
+                if (!detectedBlocks.Contains(block))
+                {
+                    // Block has been removed, add to reset list
+                    blocksToReset.Add(block);
+                }
+            }
+        }
+
+        // Reset materials for blocks that have been removed
+        foreach (Transform block in blocksToReset)
+        {
+            Block blockComponent = block.GetComponent<Block>();
+            if (blockComponent != null)
+            {
+                blockComponent.ResetMaterial();
+            }
+        }
+
+        // Update previous detected blocks
+        previousDetectedBlocks = new List<Transform>(detectedBlocks);
+
+
+        // Update previous detected blocks
+        previousDetectedBlocks = new List<Transform>(detectedBlocks);
 
         // Sort the detected blocks from left to right based on their X position
         SortBlocksLeftToRight();
@@ -137,6 +173,20 @@ public class Shelf : MonoBehaviour
     }
 
     // Public methods for external access
+
+    // delete all the shit! 
+    public void DeleteDetectedBlocks()
+    {
+        foreach (Transform block in detectedBlocks)
+        {
+            if (block != null)
+            {
+                Destroy(block.gameObject);
+            }
+        }
+        detectedBlocks.Clear();
+        sortedBlocks.Clear();
+    }
 
     // Returns a copy of the detected blocks (to avoid external modification of internal list)
     public List<Transform> GetDetectedBlocks()

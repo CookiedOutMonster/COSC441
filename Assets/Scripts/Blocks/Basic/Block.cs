@@ -21,37 +21,51 @@ public interface IBlock
 public abstract class Block : MonoBehaviour, IBlock
 {
     public BlockType Type { get; protected set; }
-    private MeshRenderer blockRenderer;
+
+    // ~ for visual feedback
+    // ogMaterial is the current material on any given block 
+    private MeshRenderer meshRenderer;
+    private Material ogMaterial;
+    // need reference to the correct/false material 
+    private Material correctMaterial;
+    private Material incorrectMaterial;
+
+    private string correctMaterialPath = "Material/Correct";
+    private string incorrectMaterialPath = "Material/Incorrect";
+
+
+    // ~ for debugging 
+    private bool printErrors = false;
+
+
+
+    // ~ for audio feedback
     private AudioSource audioSource;
-
-    // To store the original material
-    private Material originalMaterial;
-
     public string correctSoundPath = "Audio/CorrectSound"; // Path to the correct sound in Resources/Audio
     public string falseSoundPath = "Audio/FalseSound";     // Path to the false sound in Resources/Audio
 
     private AudioClip correctSound;
     private AudioClip falseSound;
 
+    protected void Awake()
+    {
+        // setting up renderer, getting og material 
+        meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        ogMaterial = meshRenderer.material;
+        // need to get Correct and Incorrect material 
+        correctMaterial = Resources.Load<Material>(correctMaterialPath);
+        incorrectMaterial = Resources.Load<Material>(incorrectMaterialPath);
+    }
+
     protected void Start()
     {
-        blockRenderer = GetComponent<MeshRenderer>();
+        /*
         audioSource = GetComponent<AudioSource>();
-
-        if (blockRenderer == null)
-        {
-            Debug.LogError("MeshRenderer component not found on the GameObject.");
-        }
 
         if (audioSource == null)
         {
             Debug.LogError("AudioSource component not found on the GameObject.");
         }
-
-        // Store the original material of the block (this could be the prefab's material)
-        originalMaterial = blockRenderer.material;
-        Debug.Log(originalMaterial);
-
         // Load audio clips from Resources/Audio
         correctSound = Resources.Load<AudioClip>(correctSoundPath);
         falseSound = Resources.Load<AudioClip>(falseSoundPath);
@@ -65,40 +79,41 @@ public abstract class Block : MonoBehaviour, IBlock
         {
             Debug.LogError("False sound not found at path: " + falseSoundPath);
         }
+        */
+
     }
 
-    public void Correct()
+    public void Validate(bool isCorrect)
     {
-        if (blockRenderer != null)
-        {
-            // Temporarily change the color to green and play the sound
-            StartCoroutine(ChangeColorTemporarily(Color.green, 0.5f));
-            PlaySound(correctSound);
-        }
+        Material whichMaterial = isCorrect ? correctMaterial : incorrectMaterial;
+
+        if (printErrors)
+            Debug.Log("this was called " + meshRenderer + " plus the supposed material " + ogMaterial);
+
+        ChangeColor(whichMaterial, 2f);
+
     }
 
-    public void False()
-    {
-        if (blockRenderer != null)
-        {
-            // Temporarily change the color to red and play the sound
-            StartCoroutine(ChangeColorTemporarily(Color.red, 1f));
-            PlaySound(falseSound);
-        }
-    }
-
-    private IEnumerator ChangeColorTemporarily(Color color, float duration)
+    private void ChangeColor(Material material, float duration)
     {
         // Temporarily change the block color
-        blockRenderer.material.color = color;
-        Debug.Log("Block color set to " + color.ToString() + " for " + duration + " seconds.");
+        //blockRenderer.material.color = color;
+        meshRenderer.material = material;
 
-        // Wait for the specified duration
-        yield return new WaitForSeconds(duration);
+        if (material == incorrectMaterial)
+            meshRenderer.material.color = Color.red;
 
-        // After the duration, reset the material back to the original material (no change in appearance)
-        blockRenderer.material = originalMaterial;
-        Debug.Log("Block color reset to original.");
+        if (printErrors)
+            Debug.Log("Block color set to " + material + " for " + duration + " seconds.");
+
+    }
+
+    public void ResetMaterial()
+    {
+        if (meshRenderer != null)
+        {
+            meshRenderer.material = ogMaterial;
+        }
     }
 
     private void PlaySound(AudioClip clip)

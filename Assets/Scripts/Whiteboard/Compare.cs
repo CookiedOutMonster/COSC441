@@ -29,31 +29,14 @@ public class Compare : MonoBehaviour
 
     }
 
-    private void getProblemBoardRef()
-    {
-        // Find the GameObject called "whiteboard-header"
-        GameObject whiteboardHeader = GameObject.Find("whiteboard-header");
-
-        if (whiteboardHeader != null)
-        {
-            // Get the ProblemBoard component attached to it
-            problemBoard = whiteboardHeader.GetComponent<ProblemBoard>();
-        }
-        else
-        {
-            Debug.Log("There was an error retrieving the ProblemBoard. This shit is not gonna work man.");
-        }
-    }
-
-
     // @Todo return enum and not bool? 
-    public bool checkBlocksOnBoard(Stack<GameObject> userStack, bool interpit, ref int errors)
+    public bool checkBlocksOnBoard(Stack<GameObject> userStack, ref int errors)
     {
+
+        bool hasChanged = IsStackDifferent(userStack);
         // stare at it until it makes sense (easy)
-        if (interpit && IsStackDifferent(userStack))
-            return interpitBlocksOnBoard(userStack, ref errors);
-        else if (!interpit && IsStackDifferent(userStack))
-            return compileBlocksOnBoard(userStack, ref errors);
+        if (hasChanged)
+            return Compile(userStack, ref errors);
         else
             return false;
     }
@@ -67,6 +50,7 @@ public class Compare : MonoBehaviour
             lastVerifiedStack = new Stack<GameObject>(currentStack);
             return true;
         }
+
 
         // Compare stack counts
         if (currentStack.Count != lastVerifiedStack.Count)
@@ -91,7 +75,7 @@ public class Compare : MonoBehaviour
         return false;
     }
 
-    private bool interpitBlocksOnBoard(Stack<GameObject> userStack, ref int errors)
+    private bool Compile(Stack<GameObject> userStack, ref int errors)
     {
 
         // retrieve soln stack from problem-board
@@ -107,6 +91,20 @@ public class Compare : MonoBehaviour
         if (printErrors)
             Debug.Log("Count = " + userStack.Count);
 
+        // too many blocks! yell at user     
+        if (userStack.Count > revSoln.Count)
+        {
+            // maybe a TODO is not make them all go red... only the ones that are too long go red... but im gonna get the rest of this working right now...
+            while (userStack.Count > 0)
+            {
+                GameObject block = userStack.Pop();
+                Block grandDaddy = block.GetComponent<Block>();
+                grandDaddy.Validate(false);
+                errors++;
+            }
+
+        }
+
         // iterate over the user supplied input only and compare 1:1 to the solution stack 
         while (userStack.Count > 0)
             checkBlock(userStack, revSoln, ref errors);
@@ -115,38 +113,9 @@ public class Compare : MonoBehaviour
         return errors == 0 && inputLength == problemLength && userStack.Count == 0 ? true : false;
     }
 
-    private bool compileBlocksOnBoard(Stack<GameObject> userStack, ref int errors)
-    {
-
-        if (userStack.Count == 0)
-        {
-            Debug.Log("Problem is not finished!");
-            return false;
-        }
-
-        Stack<string> solnStack = getSolutionStack();
-
-        // @TODO user interaction if the problem is not done yet
-        if (userStack.Count != solnStack.Count)
-        {
-            // display a problem to the user
-            // TODO: Julia this is when the code needs an error for the user. 
-            // this might need some more finessing on my part due to my implementation.
-            // TODO Gerren cook on this 
-            Debug.Log("Problem is not finished!");
-            return false;
-        }
-
-        // compile
-        while (userStack.Count > 0)
-            checkBlock(userStack, solnStack, ref errors);
-
-        // return true if there are no errors and false if there are errors 
-        return errors == 0 ? true : false;
-    }
-
     private void checkBlock(Stack<GameObject> userStack, Stack<string> solnStack, ref int errors)
     {
+        Debug.Log("do we ever make it here");
         // retrieve reference to the block the user put in
         GameObject block = userStack.Pop();
 
@@ -170,13 +139,13 @@ public class Compare : MonoBehaviour
         if ((string.Equals(solution.Replace(" ", ""), userInput.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)) == false)
         {
             // make the blocks freak! 
-            grandDaddy.False();
+            grandDaddy.Validate(false);
             errors++;
         }
 
         else if (((string.Equals(solution.Replace(" ", ""), userInput.Replace(" ", ""), StringComparison.OrdinalIgnoreCase)) == true))
         {
-            grandDaddy.Correct();
+            grandDaddy.Validate(true);
         }
     }
 
@@ -207,6 +176,22 @@ public class Compare : MonoBehaviour
         int index = problemBoard.getCurrProblemIndex();
         Stack<string> solutionStack = problemBoard.getSolutionStack(index);
         return solutionStack;
+    }
+
+    private void getProblemBoardRef()
+    {
+        // Find the GameObject called "whiteboard-header"
+        GameObject whiteboardHeader = GameObject.Find("whiteboard-header");
+
+        if (whiteboardHeader != null)
+        {
+            // Get the ProblemBoard component attached to it
+            problemBoard = whiteboardHeader.GetComponent<ProblemBoard>();
+        }
+        else
+        {
+            Debug.Log("There was an error retrieving the ProblemBoard. This shit is not gonna work man.");
+        }
     }
 
 }

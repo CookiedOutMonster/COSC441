@@ -9,6 +9,8 @@ public class Executor : MonoBehaviour
     // ~ local to class ~
     private bool isProblemStarted = false;
     private bool hasExecuted = false;
+
+    // might be dangerous to have as a global varialbe
     private bool isCorrect = false;
 
     private int totalErrors = 0;
@@ -27,6 +29,7 @@ public class Executor : MonoBehaviour
     private Compare compare;
     private StudyBehavior std;
     private FeedbackType feedBackType;
+    private BlockSpawner blockSpawner;
 
     // Live update of the blocks that the user places on the WhiteBoard Shelf 
     private Stack<GameObject> userStack = new Stack<GameObject>();
@@ -35,6 +38,9 @@ public class Executor : MonoBehaviour
     // ~ for debugging ~ 
     private bool logStack = false;
     private bool printErrors = false;
+    private bool spawnBlock = false;
+
+    public GameObject prefab_Int;
 
 
     void Awake()
@@ -43,12 +49,22 @@ public class Executor : MonoBehaviour
         getShelf();
         getStudyBehavior();
         InitializeChildren();
+        getBlockSpawner();
     }
 
 
     void Start()
     {
         feedBackType = std.GetFeedbackType();
+
+        // ~ for debugging
+        if (spawnBlock)
+        {
+            GameObject temp = Instantiate(prefab_Int, transform.position, Quaternion.identity);
+            IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
+            type.Validate(false);
+        }
+
     }
 
     // Update is called once per frame
@@ -64,23 +80,15 @@ public class Executor : MonoBehaviour
             switch (feedBackType)
             {
                 case FeedbackType.ImmediateFeedback:
-
-                    // execute a single time
-                    if (hasExecuted == false)
-                    {
-                        ShowInterpitScreen();
-                        hasExecuted = true;
-                    }
-
+                    // continous feedback
+                    whichScreen("InterpitScreen");
                     ImmediateFeedback();
-
-
                     break;
 
                 case FeedbackType.DelayedFeedback:
-                    // Handle delayed feedback (compile)
-                    // show the compile buttons on the board 
-                    //Debug.Log("Compilation has started");
+                    // feedback is controlled by a button
+                    whichScreen("CompileScreen");
+                    // imagine CompileButton() is right here
                     break;
 
 
@@ -88,28 +96,64 @@ public class Executor : MonoBehaviour
         }
     }
 
+    // Method to show the appropriate screen (Interpit or Compile) based on feedback type
+    private void whichScreen(string screen)
+    {
+        // Execute a single time
+        if (!hasExecuted)
+        {
+            if (screen.Equals("InterpitScreen"))
+                ShowInterpitScreen();
+
+            else if (screen.Equals("CompileScreen"))
+                ShowCompileScreen();
+
+            hasExecuted = true;
+        }
+
+    }
+
     // this method is responsible for calling the checkBlocksOnBoard from Compare 
     // also tracks the global error
     private void ImmediateFeedback()
     {
+        CheckAndLogErrors();
+        SubmitImmediateFeedback();
+    }
+
+    public void CompileButton()
+    {
+        Debug.Log("stack size " + userStack.Count);
+        CheckAndLogErrors();
+    }
+
+
+    // Helper method to check blocks on board and update total errors
+    private void CheckAndLogErrors()
+    {
         int errors = 0;
 
-        // only check if there are blocks on the board
-        if (userStack.Count > 0)
-        {
-            isCorrect = compare.checkBlocksOnBoard(userStack, true, ref errors);
-        }
+        // Check blocks on the board
+        this.isCorrect = compare.checkBlocksOnBoard(this.userStack, ref errors);
 
-        totalErrors += errors;
+        // Update the total errors
+        this.totalErrors += errors;
 
+        // Optionally log the errors if needed
         if (printErrors)
         {
-            if (totalErrors > 0) Debug.Log(totalErrors);
-            if (isCorrect) Debug.Log($"Problem Finished! with {totalErrors}");
+            if (totalErrors > 0)
+            {
+                Debug.Log(totalErrors);
+            }
+            if (isCorrect)
+            {
+                Debug.Log($"Problem Finished! with {totalErrors}");
+            }
         }
     }
 
-    public void SubmitImmediateFeedback()
+    public void SubmitImmediateFeedback() // *SCREEN*
     {
         if (isCorrect && feedBackType == FeedbackType.ImmediateFeedback)
         {
@@ -117,9 +161,14 @@ public class Executor : MonoBehaviour
             isProblemStarted = false;
             // Hiding appropriate menus
             HideInterpitScreen();
-            ShowCorrectNextScreen(); // i want to play a sound here lol
-            std.LogData(totalErrors);
+            // show the correct screen
+            ShowCorrectNextScreen();
             // log data 
+            std.LogData(totalErrors);
+            // reset blocks
+            shelf.DeleteDetectedBlocks();
+            // reset error 
+            this.totalErrors = 0;
         }
         else if (!isCorrect && feedBackType == FeedbackType.ImmediateFeedback)
         {
@@ -134,8 +183,10 @@ public class Executor : MonoBehaviour
         std.newTrial();
         // indicate to this Object that the problem has started and we should be looking for blocks on the whiteboard in the Update method 
         isProblemStarted = true;
-        // hide the StartProblem subsection 
+        // hide the StartProblem screen on the menu
         HideStartScreen();
+        // Show the block spawner
+        ShowBlockSpawner();
     }
 
     public void onSubmit()
@@ -144,11 +195,13 @@ public class Executor : MonoBehaviour
     }
 
     // Method to show the "Compile" child
-    private void ShowCompile()
+    private void ShowCompileScreen()
     {
+        Debug.Log(compile);
         if (compile != null)
         {
             compile.SetActive(true);
+            Debug.Log(compile.activeSelf);
         }
     }
 
@@ -225,6 +278,22 @@ public class Executor : MonoBehaviour
         }
     }
 
+    private void ShowBlockSpawner()
+    {
+        if (blockSpawner != null)
+        {
+            blockSpawner.gameObject.SetActive(true);
+        }
+    }
+
+    private void HideBlockSpawner()
+    {
+        if (blockSpawner != null)
+        {
+            blockSpawner.gameObject.SetActive(false);
+        }
+    }
+
     private void printStack()
     {
         userStack = shelf.GetSortedBlocksLeftToRight();
@@ -269,6 +338,21 @@ public class Executor : MonoBehaviour
         }
     }
 
+    // little diff cause we need the hidden 1 
+    private void getBlockSpawner()
+    {
+        BlockSpawner temp = FindObjectOfType<BlockSpawner>(includeInactive: true);
+
+        if (temp != null)
+        {
+            blockSpawner = temp;
+        }
+        else
+        {
+            Debug.Log("There was an error retrieving the Block Spawner component.");
+        }
+    }
+
     private void getStudyBehavior()
     {
         // Find the GameObject called "Board"
@@ -281,7 +365,7 @@ public class Executor : MonoBehaviour
         }
         else
         {
-            Debug.Log("There was an error retrieving the Compare component. This is not going to work.");
+            Debug.Log("There was an error retrieving the Study Behavior component. This is not going to work.");
         }
     }
 
@@ -293,7 +377,7 @@ public class Executor : MonoBehaviour
 
         foreach (Transform child in allChildren)
         {
-            if (child.name == "Compile")
+            if (child.name == "CompileScreen")
                 compile = child.gameObject;
             if (child.name == "Begin")
                 startProblem = child.gameObject;
