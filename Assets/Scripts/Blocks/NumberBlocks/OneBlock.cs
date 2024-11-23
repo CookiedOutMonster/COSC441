@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Three : NumberBlock
+public class OneBlock : NumberBlock
 {
     private void Start()
     {
         base.Start();
-        Number = Number.Three;
+        Number = Number.One;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning 3 Block");
+        Debug.Log("Spawning 1 Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting 3 Block");
+        Debug.Log("Deleting 1 Block");
     }
 }

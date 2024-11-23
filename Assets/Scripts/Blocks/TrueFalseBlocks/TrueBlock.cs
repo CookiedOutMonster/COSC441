@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class X : TextBlock
+public class TrueBlock : TrueFalseBlock
 {
     private void Start()
     {
         base.Start();
-        Text Text = Text.X;
+        Value Value = Value.True;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning X Block");
+        Debug.Log("Spawning True Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting X Block");
+        Debug.Log("Deleting True Block");
     }
 }

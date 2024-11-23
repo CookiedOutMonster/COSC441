@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Decimal : NumberBlock
+public class FalseBlock : TrueFalseBlock
 {
     private void Start()
     {
         base.Start();
-        Number = Number.Decimal;
+        Value Value = Value.False;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning Decimal Block");
+        Debug.Log("Spawning False Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting Decimal Block");
+        Debug.Log("Deleting False Block");
     }
 }

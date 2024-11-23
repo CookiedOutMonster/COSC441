@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class C : TextBlock
+public class BBlock : TextBlock
 {
     private void Start()
     {
         base.Start();
-        Text Text = Text.C;
+        Text Text = Text.B;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning C Block");
+        Debug.Log("Spawning B Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting C Block");
+        Debug.Log("Deleting B Block");
     }
 }

@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Two : NumberBlock
+public class XBlock : TextBlock
 {
     private void Start()
     {
         base.Start();
-        Number = Number.Two;
+        Text Text = Text.X;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning 2 Block");
+        Debug.Log("Spawning X Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting 2 Block");
+        Debug.Log("Deleting X Block");
     }
 }

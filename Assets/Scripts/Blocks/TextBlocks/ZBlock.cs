@@ -2,24 +2,24 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class True : TrueFalseBlock
+public class ZBlock : TextBlock
 {
     private void Start()
     {
         base.Start();
-        Value Value = Value.True;
+        Text Text = Text.Z;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning True Block");
+        Debug.Log("Spawning Z Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting True Block");
+        Debug.Log("Deleting Z Block");
     }
 }

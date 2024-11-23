@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Y : TextBlock
+public class YBlock : TextBlock
 {
     private void Start()
     {
