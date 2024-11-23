@@ -9,9 +9,9 @@ BoolAlgBlock: and &, or |, not !
 AssignmentBlock: =, !=
 MathBlock: +, -, *, /
 
-StringValBlock: text value to be assigned to a String VarTypeBlock 
-NumberValBlock: number to be assigned to an Int or Float VarTypeBlock
-BooleanValBlock: true/false value, to be assigned to a Bool VarTypeBlock
+TextBlock: text value to be assigned to a String VarTypeBlock 
+NumberBlock: number to be assigned to an Int or Float VarTypeBlock
+TrueFalseBlock: true/false value, to be assigned to a Bool VarTypeBlock
 */
 public enum BlockType
 {
@@ -20,9 +20,9 @@ public enum BlockType
     BoolAlgBlock,
     AssignmentBlock,
     MathBlock,
-    StringValBlock,
-    NumberValBlock,
-    BooleanValBlock
+    TextBlock,
+    NumberBlock,
+    TrueFalseBlock
 }
 
 public interface IBlock
