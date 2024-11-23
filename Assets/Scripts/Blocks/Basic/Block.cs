@@ -72,17 +72,6 @@ public abstract class Block : MonoBehaviour, IBlock
         {
             Debug.LogError("False sound not found at path: " + falseSoundPath);
         }
-
-        if (EditorUtility.DisplayDialog("Test", "Correct or false?", "Correct", "False"))
-        {
-            Debug.Log("test Correct() method");
-            this.Correct();
-        }
-        else
-        {
-            Debug.Log("test False() method");
-            this.False();
-        }
     }
 
     public void Correct()
