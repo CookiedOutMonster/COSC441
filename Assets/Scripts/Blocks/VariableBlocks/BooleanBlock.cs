@@ -1,24 +1,23 @@
 using UnityEngine;
 
-public class BooleanVariableBlock : VariableBlock
+public class BooleanVariableBlock : VarTypeBlock
 {
     private void Start()
     {
         base.Start();
         VariableType = VariableType.Boolean;
-        Value = "true";
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning Boolean Variable Block with default value: " + Value);
+        Debug.Log("Spawning Boolean VarType Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting Boolean Variable Block");
+        Debug.Log("Deleting Boolean VarType Block");
     }
 }
