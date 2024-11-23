@@ -75,6 +75,7 @@ public class Shelf : MonoBehaviour
             if (blockComponent != null)
             {
                 blockComponent.ResetMaterial();
+                //blockComponent.ResetRimColorAfterDelay();
             }
         }
 

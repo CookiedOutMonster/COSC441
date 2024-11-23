@@ -11,6 +11,10 @@ public class ProblemBoard : MonoBehaviour
     private int currProblem = 0;
     private const int PROBLEM_SET_COMPLETE = -1; // to be assigned to currProblem, indicates that participant has completed everything
 
+    /*
+    @TODO there is a problem in reading a single solution. This board thinks that somehow, someway, that there is two answers? 
+    */
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -103,10 +107,10 @@ public class ProblemBoard : MonoBehaviour
     * This method will likely change based on how we want the solution stack to be formatted/how the blocks end up being set up.
     * General idea should stay same though
     */
-    public Stack<string> getSolutionStack(int id)
+    public Stack<string> getSolutionStack()
     {
         Stack<string> solnStack = new Stack<string>();
-        string[] solnBlocks = solutions[id].Split(", ");
+        string[] solnBlocks = solutions[currProblem].Split(", ");
 
         for (int i = 0; i < solnBlocks.Length; i++)
         {

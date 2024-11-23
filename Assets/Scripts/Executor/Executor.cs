@@ -6,9 +6,14 @@ using UnityEngine.UI; // For handling UI elements (Image, Text)
 
 public class Executor : MonoBehaviour
 {
+    // ~ constants ~
+    private const bool FINISHED_STUDY = true;
+    private const bool HAS_NOT_FINISHED_STUDY = false;
+
     // ~ local to class ~
     private bool isProblemStarted = false;
     private bool hasExecuted = false;
+    private bool studyStatus = false;
 
     // might be dangerous to have as a global varialbe
     private bool isCorrect = false;
@@ -20,6 +25,7 @@ public class Executor : MonoBehaviour
     private GameObject startProblem;
     private GameObject interpit;
     private GameObject correctNext;
+    private GameObject finished;
 
 
     // ~ getting from other shit ~
@@ -38,7 +44,8 @@ public class Executor : MonoBehaviour
     // ~ for debugging ~ 
     private bool logStack = false;
     private bool printErrors = false;
-    private bool spawnBlock = false;
+    private bool spawnBlock = true;
+
 
     public GameObject prefab_Int;
 
@@ -64,35 +71,41 @@ public class Executor : MonoBehaviour
             IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
             type.Validate(false);
         }
-
     }
 
     // Update is called once per frame
     void Update()
     {
         //Debug.Log(isProblemStarted);
-        if (isProblemStarted)
+        if (isProblemStarted == true && studyStatus == HAS_NOT_FINISHED_STUDY)
         {
-            // Get reference to the blocks on the board
-            userStack = shelf.GetSortedBlocksLeftToRight();
+            ManageStudy();
+        }
+        else if (studyStatus == FINISHED_STUDY)
+        {
+            ShowFinishedScreen();
+        }
+    }
 
-            // Determine which "execute" method to use based on feedback type
-            switch (feedBackType)
-            {
-                case FeedbackType.ImmediateFeedback:
-                    // continous feedback
-                    whichScreen("InterpitScreen");
-                    ImmediateFeedback();
-                    break;
+    private void ManageStudy()
+    {
+        // Get reference to the blocks on the board
+        userStack = shelf.GetSortedBlocksLeftToRight();
 
-                case FeedbackType.DelayedFeedback:
-                    // feedback is controlled by a button
-                    whichScreen("CompileScreen");
-                    // imagine CompileButton() is right here
-                    break;
+        // Determine which "execute" method to use based on feedback type
+        switch (feedBackType)
+        {
+            case FeedbackType.ImmediateFeedback:
+                // continous feedback
+                whichScreen("InterpitScreen");
+                ImmediateFeedback();
+                break;
 
-
-            }
+            case FeedbackType.DelayedFeedback:
+                // feedback is controlled by a button
+                whichScreen("CompileScreen");
+                // imagine CompileButton() is right here
+                break;
         }
     }
 
@@ -100,7 +113,7 @@ public class Executor : MonoBehaviour
     private void whichScreen(string screen)
     {
         // Execute a single time
-        if (!hasExecuted)
+        if (!this.hasExecuted)
         {
             if (screen.Equals("InterpitScreen"))
                 ShowInterpitScreen();
@@ -108,7 +121,7 @@ public class Executor : MonoBehaviour
             else if (screen.Equals("CompileScreen"))
                 ShowCompileScreen();
 
-            hasExecuted = true;
+            this.hasExecuted = true;
         }
 
     }
@@ -118,20 +131,17 @@ public class Executor : MonoBehaviour
     private void ImmediateFeedback()
     {
         CheckAndLogErrors();
-        SubmitImmediateFeedback();
     }
 
     public void CompileButton()
     {
-        Debug.Log("stack size " + userStack.Count);
         CheckAndLogErrors();
     }
-
 
     // Helper method to check blocks on board and update total errors
     private void CheckAndLogErrors()
     {
-        int errors = 0;
+        int errors = 0; // glitch with errors needs fixing
 
         // Check blocks on the board
         this.isCorrect = compare.checkBlocksOnBoard(this.userStack, ref errors);
@@ -153,7 +163,7 @@ public class Executor : MonoBehaviour
         }
     }
 
-    public void SubmitImmediateFeedback() // *SCREEN*
+    public void SubmitImmediateFeedback() // *this is a button*
     {
         if (isCorrect && feedBackType == FeedbackType.ImmediateFeedback)
         {
@@ -169,18 +179,44 @@ public class Executor : MonoBehaviour
             shelf.DeleteDetectedBlocks();
             // reset error 
             this.totalErrors = 0;
+            // hide block spawner 
+            HideBlockSpawner();
         }
-        else if (!isCorrect && feedBackType == FeedbackType.ImmediateFeedback)
+        else if (isCorrect == false && feedBackType == FeedbackType.ImmediateFeedback)
         {
+            // might need to make this into a function for reuse, who knows 
+            FeedBack feedback = interpit.GetComponent<FeedBack>();
 
-            // TODO make another screen...
+            if (feedback != null)
+            {
+                feedback.ShowError("Problem not done!");
+            }
+            else
+            {
+                Debug.LogWarning("Feedback not found");
+            }
+
         }
+    }
+
+    public void NextProblemButton()
+    {
+        // show block spawner 
+        ShowBlockSpawner();
+        // hide screen
+        HideCorrectNextScreen();
+        // on button press start the trail, if true, set the study status to finished study which updates the main loop
+        studyStatus = std.newTrial() ? FINISHED_STUDY : HAS_NOT_FINISHED_STUDY;
+        // indicate to this Object that the problem has started and we should be looking for blocks on the whiteboard in the Update method 
+        isProblemStarted = true;
+        // show ze screen 
+        hasExecuted = false;
     }
 
     public void StartProblemButton()
     {
         // on button press start the trail
-        std.newTrial();
+        studyStatus = std.newTrial() ? FINISHED_STUDY : HAS_NOT_FINISHED_STUDY;
         // indicate to this Object that the problem has started and we should be looking for blocks on the whiteboard in the Update method 
         isProblemStarted = true;
         // hide the StartProblem screen on the menu
@@ -197,7 +233,6 @@ public class Executor : MonoBehaviour
     // Method to show the "Compile" child
     private void ShowCompileScreen()
     {
-        Debug.Log(compile);
         if (compile != null)
         {
             compile.SetActive(true);
@@ -266,6 +301,8 @@ public class Executor : MonoBehaviour
         if (interpit != null)
         {
             interpit.SetActive(true);
+            Debug.Log("we got here boys and squirrels" + interpit.activeSelf);
+
         }
     }
 
@@ -275,6 +312,14 @@ public class Executor : MonoBehaviour
         if (interpit != null)
         {
             interpit.SetActive(false);
+        }
+    }
+
+    private void ShowFinishedScreen()
+    {
+        if (finished != null)
+        {
+            finished.SetActive(true);
         }
     }
 
@@ -385,6 +430,8 @@ public class Executor : MonoBehaviour
                 interpit = child.gameObject;
             if (child.name == "Correct-Next")
                 correctNext = child.gameObject;
+            if (child.name == "Finished")
+                finished = child.gameObject;
         }
 
         // Check if any are null and log accordingly

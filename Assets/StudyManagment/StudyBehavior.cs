@@ -22,6 +22,10 @@ public enum FeedbackType //allows feedback selection type to be made in unity in
 
 public class StudyBehavior : MonoBehaviour
 {
+    // constants 
+    private const bool FINISHED_STUDY = true;
+    private const bool HAS_NOT_FINISHED_STUDY = false;
+
     private ProblemBoard problemBoard;
     [SerializeField] private StudySettings studySettings;
     [SerializeField] private TextMeshProUGUI feedbackText; // displays feedback to participant 
@@ -31,7 +35,6 @@ public class StudyBehavior : MonoBehaviour
     private bool hasStarted = false;
 
     private int currentTrialIndex = 0;
-    private int wrongAnswerProvided = 0; //incorrect attempts   
     private bool isCorrect = false;
     private Stack<string> participantSolution = new Stack<string>(); // Stores participant solution
     private List<int> blockSequence = new List<int>();
@@ -56,6 +59,9 @@ public class StudyBehavior : MonoBehaviour
         //LogHeader(); //logs above header for data
         CreateBlock(); //creates data block
         LogHeader();
+
+
+
         //newTrial(); //starts trial
     }
 
@@ -86,32 +92,37 @@ public class StudyBehavior : MonoBehaviour
 
 
     // consider making this return false indicating that the study is done 
-    public void newTrial()
+    public bool newTrial()
     {
         if (currentTrialIndex >= blockSequence.Count) //checks if there are reamining trials
         {
-            EndStudy();
-            return; //return false
+            return FINISHED_STUDY;
         }
 
         //int problemIndex = blockSequence[currentTrialIndex]; // Get current problem index (from yates shuffle)
         // for now I am just going to use 0
         int problemIndex = currentTrialIndex;
 
-        problemBoard.displayProblem(problemIndex); // Displays problem 
+        if (currentTrialIndex == 0)
+            // Displays problem but does not incriment solution stack for GetSoltuionStack, ie starts at index 0
+            problemBoard.displayProblem(problemIndex);
 
-        wrongAnswerProvided = 0; // Reset incorrect attempts
+        else
+            // Displays problem and increases currProblem within the ProblemBoard method, ensure that GetSolutionStack has the right stack.
+            problemBoard.nextProblem();
+
         isCorrect = false; // Reset correct status
 
         currentTrialIndex++; // Move next trial index
 
         hasStarted = true;
         trialTimer = 0f; // Reset timer
+        return HAS_NOT_FINISHED_STUDY;
     }
 
-    private string DetermineProblemDifficulty(int problemIndex)
+    private string DetermineProblemDifficulty()
     {
-        int blockCount = problemBoard.getSolutionStack(problemIndex).Count;
+        int blockCount = problemBoard.getSolutionStack().Count;
 
         if (blockCount >= 1 && blockCount <= 3)
             return "Easy";
@@ -202,7 +213,7 @@ public class StudyBehavior : MonoBehaviour
             studySettings.feedbackType.ToString(),
             trialTimer.ToString(), // Use the tracked trial timer
             totalErrors.ToString(),
-            DetermineProblemDifficulty(currentTrialIndex - 1) // Use previous trial index
+            DetermineProblemDifficulty() // Use previous trial index
         };
 
         CSVManager.AppendToCSV(data);

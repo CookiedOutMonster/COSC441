@@ -88,9 +88,6 @@ public class Compare : MonoBehaviour
         //Stack<GameObject> revUser = ReverseStack(userStack);
         Stack<string> revSoln = ReverseStack(solnStack);
 
-        if (printErrors)
-            Debug.Log("Count = " + userStack.Count);
-
         // too many blocks! yell at user     
         if (userStack.Count > revSoln.Count)
         {
@@ -109,13 +106,22 @@ public class Compare : MonoBehaviour
         while (userStack.Count > 0)
             checkBlock(userStack, revSoln, ref errors);
 
+        if (printErrors)
+        {
+            Debug.Log("inputLength = " + inputLength);
+            Debug.Log("problemLength = " + problemLength);
+            Debug.Log("errors = " + errors);
+            Debug.Log("userStack.Count " + userStack.Count);
+            Debug.Log("evaluation " + (errors == 0 && inputLength == problemLength && userStack.Count == 0));
+        }
+
+
         // return true if there are no errors in the code and the user has completed the question
-        return errors == 0 && inputLength == problemLength && userStack.Count == 0 ? true : false;
+        return errors == 0 && inputLength == problemLength && userStack.Count == 0;
     }
 
     private void checkBlock(Stack<GameObject> userStack, Stack<string> solnStack, ref int errors)
     {
-        Debug.Log("do we ever make it here");
         // retrieve reference to the block the user put in
         GameObject block = userStack.Pop();
 
@@ -172,9 +178,8 @@ public class Compare : MonoBehaviour
 
     private Stack<string> getSolutionStack()
     {
-        // retrieve problem's index in order to get correct stack from file 
-        int index = problemBoard.getCurrProblemIndex();
-        Stack<string> solutionStack = problemBoard.getSolutionStack(index);
+        // retrieve problem's index in order to get correct stack from file
+        Stack<string> solutionStack = problemBoard.getSolutionStack();
         return solutionStack;
     }
 
