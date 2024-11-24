@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEngine;
 
@@ -17,70 +18,88 @@ public interface IBlock
     void Delete();
 }
 
-// Abstract base class for all block types
 public abstract class Block : MonoBehaviour, IBlock
 {
     public BlockType Type { get; protected set; }
 
-    // ~ for visual feedback
-    // ogMaterial is the current material on any given block 
     private MeshRenderer meshRenderer;
     private Material ogMaterial;
-    // need reference to the correct/false material 
     private Material correctMaterial;
     private Material incorrectMaterial;
 
     private string correctMaterialPath = "Material/Correct";
     private string incorrectMaterialPath = "Material/Incorrect";
 
-
-    // ~ for debugging 
     private bool printErrors = false;
 
-
-
-    // ~ for audio feedback
     private AudioSource audioSource;
-    public string correctSoundPath = "Audio/CorrectSound"; // Path to the correct sound in Resources/Audio
-    public string falseSoundPath = "Audio/FalseSound";     // Path to the false sound in Resources/Audio
+    public string correctSoundPath = "Audio/CorrectSound";
+    public string falseSoundPath = "Audio/FalseSound";
 
     private AudioClip correctSound;
     private AudioClip falseSound;
 
+    private GameObject markObject;
+    private TextMesh textMesh;
+    private Vector3 markOffset = new Vector3(0, 0.4f, 0); // Offset from block position
+
     protected void Awake()
     {
-        // setting up renderer, getting og material 
         meshRenderer = gameObject.GetComponent<MeshRenderer>();
         ogMaterial = meshRenderer.material;
-        // need to get Correct and Incorrect material 
         correctMaterial = Resources.Load<Material>(correctMaterialPath);
         incorrectMaterial = Resources.Load<Material>(incorrectMaterialPath);
+
+        // Create validation mark as an independent GameObject
+        markObject = new GameObject("ValidationMark_" + gameObject.name);
+        textMesh = markObject.AddComponent<TextMesh>();
+        textMesh.alignment = TextAlignment.Center;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textMesh.fontSize = 100;
+        textMesh.characterSize = 0.05f;
+
+        // Position the mark
+        UpdateMarkPosition();
+
+        // Add billboard effect to always face camera
+        markObject.AddComponent<Billboard>();
+
+        markObject.SetActive(false);
+    }
+
+    private void UpdateMarkPosition()
+    {
+        if (markObject != null)
+        {
+            markObject.transform.position = transform.position + markOffset;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        UpdateMarkPosition();
     }
 
     protected void Start()
     {
         /*
         audioSource = GetComponent<AudioSource>();
-
-        if (audioSource == null)
-        {
+        
+        if (audioSource == null) {
             Debug.LogError("AudioSource component not found on the GameObject.");
         }
         // Load audio clips from Resources/Audio
         correctSound = Resources.Load<AudioClip>(correctSoundPath);
         falseSound = Resources.Load<AudioClip>(falseSoundPath);
-
-        if (correctSound == null)
-        {
+        
+        if (correctSound == null) {
             Debug.LogError("Correct sound not found at path: " + correctSoundPath);
         }
-
-        if (falseSound == null)
-        {
+        
+        if (falseSound == null) {
             Debug.LogError("False sound not found at path: " + falseSoundPath);
         }
         */
-
     }
 
     public void Validate(bool isCorrect)
@@ -90,22 +109,29 @@ public abstract class Block : MonoBehaviour, IBlock
         if (printErrors)
             Debug.Log("this was called " + meshRenderer + " plus the supposed material " + ogMaterial);
 
-        ChangeColor(whichMaterial, 2f);
-
+        //ChangeColor(whichMaterial);
+        ShowValidationMark(isCorrect);
     }
 
-    private void ChangeColor(Material material, float duration)
+    private void ShowValidationMark(bool isCorrect)
     {
-        // Temporarily change the block color
-        //blockRenderer.material.color = color;
+        if (markObject != null)
+        {
+            textMesh.text = isCorrect ? "✓" : "X";
+            textMesh.color = isCorrect ? Color.green : Color.red;
+            markObject.SetActive(true);
+        }
+    }
+
+    private void ChangeColor(Material material)
+    {
         meshRenderer.material = material;
 
         if (material == incorrectMaterial)
             meshRenderer.material.color = Color.red;
 
         if (printErrors)
-            Debug.Log("Block color set to " + material + " for " + duration + " seconds.");
-
+            Debug.Log("Block color set to " + material);
     }
 
     public void ResetMaterial()
@@ -113,6 +139,19 @@ public abstract class Block : MonoBehaviour, IBlock
         if (meshRenderer != null)
         {
             meshRenderer.material = ogMaterial;
+        }
+        if (markObject != null)
+        {
+            markObject.SetActive(false);
+        }
+    }
+
+    private void OnDestroy()
+    {
+        // Clean up the mark object when the block is destroyed
+        if (markObject != null)
+        {
+            Destroy(markObject);
         }
     }
 
@@ -126,4 +165,24 @@ public abstract class Block : MonoBehaviour, IBlock
 
     public abstract void Spawn();
     public abstract void Delete();
+}
+
+// Billboard script to make text face camera
+public class Billboard : MonoBehaviour
+{
+    private Camera mainCamera;
+
+    void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
+    void LateUpdate()
+    {
+        if (mainCamera != null)
+        {
+            transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
+                           mainCamera.transform.rotation * Vector3.up);
+        }
+    }
 }

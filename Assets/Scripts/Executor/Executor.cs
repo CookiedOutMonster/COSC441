@@ -44,7 +44,7 @@ public class Executor : MonoBehaviour
     // ~ for debugging ~ 
     private bool logStack = false;
     private bool printErrors = false;
-    private bool spawnBlock = true;
+    private bool spawnBlock = false;
 
 
     public GameObject prefab_Int;
@@ -195,7 +195,7 @@ public class Executor : MonoBehaviour
     private void HandleIncorrectSolution()
     {
         const string NOT_FINISHED_MESSAGE = "   Problem not finished!";
-        const string WRONG_ANSWER_MESSAGE = "   Wrong solution. Try again!";
+        const string WRONG_ANSWER_MESSAGE = "   Wrong solution or incompleted. Fix or finish!";
 
         string errorMessage = feedBackType == FeedbackType.ImmediateFeedback
             ? NOT_FINISHED_MESSAGE
