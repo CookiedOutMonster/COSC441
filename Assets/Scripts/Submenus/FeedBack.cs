@@ -67,4 +67,11 @@ public class FeedBack : MonoBehaviour
             message.enabled = false;  // Make the TextMeshProUGUI invisible
         }
     }
+
+    // Public method to hide both the error image and the message
+    public void HideError()
+    {
+        HideIncorrectImage();  // Hide the RawImage (error image)
+        HideMessage();         // Hide the TextMeshProUGUI message
+    }
 }

@@ -98,7 +98,7 @@ public class Executor : MonoBehaviour
             case FeedbackType.ImmediateFeedback:
                 // continous feedback
                 whichScreen("InterpitScreen");
-                ImmediateFeedback();
+                CheckAndLogErrors();
                 break;
 
             case FeedbackType.DelayedFeedback:
@@ -126,16 +126,15 @@ public class Executor : MonoBehaviour
 
     }
 
-    // this method is responsible for calling the checkBlocksOnBoard from Compare 
-    // also tracks the global error
-    private void ImmediateFeedback()
-    {
-        CheckAndLogErrors();
-    }
-
     public void CompileButton()
     {
         CheckAndLogErrors();
+        OnCorrect();
+    }
+
+    public void SubmitImmediateFeedback() // *this is a button*
+    {
+        OnCorrect();
     }
 
     // Helper method to check blocks on board and update total errors
@@ -163,39 +162,82 @@ public class Executor : MonoBehaviour
         }
     }
 
-    public void SubmitImmediateFeedback() // *this is a button*
+    public void OnCorrect()
     {
-        if (isCorrect && feedBackType == FeedbackType.ImmediateFeedback)
+        if (!isCorrect)
         {
-            // prevent the Update loop from fucking with my shit
-            isProblemStarted = false;
-            // Hiding appropriate menus
-            HideInterpitScreen();
-            // show the correct screen
-            ShowCorrectNextScreen();
-            // log data 
-            std.LogData(totalErrors);
-            // reset blocks
-            shelf.DeleteDetectedBlocks();
-            // reset error 
-            this.totalErrors = 0;
-            // hide block spawner 
-            HideBlockSpawner();
+            HandleIncorrectSolution();
+            return;
         }
-        else if (isCorrect == false && feedBackType == FeedbackType.ImmediateFeedback)
+
+        HandleCorrectSolution();
+    }
+
+    private void HandleCorrectSolution()
+    {
+        // Stop the Update loop
+        isProblemStarted = false;
+
+        // Hide appropriate menus based on feedback type
+        HideAppropriateMenus();
+
+        // Hide any error messages
+        HideErrorMessages();
+
+        // Show success screen and cleanup
+        ShowCorrectNextScreen();
+        std.LogData(totalErrors);
+        shelf.DeleteDetectedBlocks();
+        totalErrors = 0;
+        HideBlockSpawner();
+    }
+
+    private void HandleIncorrectSolution()
+    {
+        const string NOT_FINISHED_MESSAGE = "   Problem not finished!";
+        const string WRONG_ANSWER_MESSAGE = "   Wrong solution. Try again!";
+
+        string errorMessage = feedBackType == FeedbackType.ImmediateFeedback
+            ? NOT_FINISHED_MESSAGE
+            : WRONG_ANSWER_MESSAGE;
+
+        FeedBack feedback = GetFeedbackComponent();
+        ShowError(feedback, errorMessage);
+    }
+
+    private void HideAppropriateMenus()
+    {
+        if (feedBackType == FeedbackType.ImmediateFeedback)
         {
-            // might need to make this into a function for reuse, who knows 
-            FeedBack feedback = interpit.GetComponent<FeedBack>();
+            HideInterpitScreen();
+        }
+        else if (feedBackType == FeedbackType.DelayedFeedback)
+        {
+            HideCompile();
+        }
+    }
 
-            if (feedback != null)
-            {
-                feedback.ShowError("Problem not done!");
-            }
-            else
-            {
-                Debug.LogWarning("Feedback not found");
-            }
+    private void HideErrorMessages()
+    {
+        FeedBack feedback = GetFeedbackComponent();
+        feedback.HideError();
+    }
 
+    private FeedBack GetFeedbackComponent()
+    {
+        return feedBackType == FeedbackType.ImmediateFeedback
+            ? interpit.GetComponent<FeedBack>()
+            : compile.GetComponent<FeedBack>();
+    }
+    private void ShowError(FeedBack feedback, string errorMessage)
+    {
+        if (feedback != null)
+        {
+            feedback.ShowError(errorMessage);
+        }
+        else
+        {
+            Debug.LogWarning("Feedback not found");
         }
     }
 
