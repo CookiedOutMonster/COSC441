@@ -1,13 +1,28 @@
 using System.Collections;
+using UnityEditor;
 using UnityEngine;
 
+/*
+VarTypeBlock: declare a variable and set its type (int, float, string, bool), that's it
+ComparisonBlock: !=, ==, <, >, >=, <=
+BoolAlgBlock: and &, or |, not !
+AssignmentBlock: =, !=
+MathBlock: +, -, *, /
+
+TextBlock: text value to be assigned to a String VarTypeBlock 
+NumberBlock: number to be assigned to an Int or Float VarTypeBlock
+TrueFalseBlock: true/false value, to be assigned to a Bool VarTypeBlock
+*/
 public enum BlockType
 {
-    VariableBlock,
+    VarTypeBlock,
     ComparisonBlock,
     BoolAlgBlock,
     AssignmentBlock,
-    MathBlock
+    MathBlock,
+    TextBlock,
+    NumberBlock,
+    TrueFalseBlock
 }
 
 public interface IBlock

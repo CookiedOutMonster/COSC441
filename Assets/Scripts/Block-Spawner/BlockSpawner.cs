@@ -51,12 +51,12 @@ public class BlockSpawner : MonoBehaviour
     public GameObject prefab_decimal;
 
 
-    
+
 
     // Start is called before the first frame update
     void Start()
     {
-       
+
     }
 
     // Update is called once per frame
@@ -216,129 +216,112 @@ public class BlockSpawner : MonoBehaviour
         GameObject temp = Instantiate(prefab_Divide, spawnBlockToTheLeft(), Quaternion.identity);
         DivisionBlock type = temp.AddComponent<DivisionBlock>();
     }
-/*
+    /*
         For Letters
     */
     public void spawnA()
     {
         GameObject temp = Instantiate(prefab_A, spawnBlockToTheLeft(), Quaternion.identity);
-        StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
-        type.SetValue("A");
+        ABlock type = temp.AddComponent<ABlock>();
     }
 
     public void spawnB()
     {
         GameObject temp = Instantiate(prefab_B, spawnBlockToTheLeft(), Quaternion.identity);
-        StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
-        type.SetValue("B");
+        BBlock type = temp.AddComponent<BBlock>();
     }
 
     public void spawnC()
     {
         GameObject temp = Instantiate(prefab_C, spawnBlockToTheLeft(), Quaternion.identity);
-        StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
-        type.SetValue("C");
+        CBlock type = temp.AddComponent<CBlock>();
     }
 
     public void spawnX()
     {
         GameObject temp = Instantiate(prefab_X, spawnBlockToTheLeft(), Quaternion.identity);
-        StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
-        type.SetValue("X");
+        XBlock type = temp.AddComponent<XBlock>();
     }
-    
-     public void spawnY()
+
+    public void spawnY()
     {
         GameObject temp = Instantiate(prefab_Y, spawnBlockToTheLeft(), Quaternion.identity);
-        StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
-        type.SetValue("Y");
+        YBlock type = temp.AddComponent<YBlock>();
     }
 
-      public void spawnZ()
+    public void spawnZ()
     {
         GameObject temp = Instantiate(prefab_Z, spawnBlockToTheLeft(), Quaternion.identity);
-        StringVariableBlock type = temp.AddComponent<StringVariableBlock>();
-        type.SetValue("Z");
+        ZBlock type = temp.AddComponent<ZBlock>();
     }
 
-//     /*
-//         For Numbers
-//     */
- public void spawn0()
+    /*
+        For Numbers
+    */
+    public void spawn0()
     {
         GameObject temp = Instantiate(prefab_0, spawnBlockToTheLeft(), Quaternion.identity);
         IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("0");
     }
 
-     public void spawn1()
+    public void spawn1()
     {
         GameObject temp = Instantiate(prefab_1, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("1");
+        OneBlock type = temp.AddComponent<OneBlock>();
     }
 
-     public void spawn2()
+    public void spawn2()
     {
         GameObject temp = Instantiate(prefab_2, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("2");
+        TwoBlock type = temp.AddComponent<TwoBlock>();
     }
 
-     public void spawn3()
+    public void spawn3()
     {
         GameObject temp = Instantiate(prefab_3, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("3");
+        ThreeBlock type = temp.AddComponent<ThreeBlock>();
     }
 
-     public void spawn4()
+    public void spawn4()
     {
         GameObject temp = Instantiate(prefab_4, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("4");
+        FourBlock type = temp.AddComponent<FourBlock>();
     }
 
     public void spawn5()
     {
         GameObject temp = Instantiate(prefab_5, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("5");
+        FiveBlock type = temp.AddComponent<FiveBlock>();
     }
 
-     public void spawn6()
+    public void spawn6()
     {
         GameObject temp = Instantiate(prefab_6, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("6");
+        SixBlock type = temp.AddComponent<SixBlock>();
     }
 
     public void spawn7()
     {
         GameObject temp = Instantiate(prefab_7, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("7");
+        SevenBlock type = temp.AddComponent<SevenBlock>();
     }
 
-     public void spawn8()
+    public void spawn8()
     {
         GameObject temp = Instantiate(prefab_8, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("8");
+        EightBlock type = temp.AddComponent<EightBlock>();
     }
 
-     public void spawn9()
+    public void spawn9()
     {
         GameObject temp = Instantiate(prefab_9, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue("9");
+        NineBlock type = temp.AddComponent<NineBlock>();
     }
 
     public void spawnDec()
     {
         GameObject temp = Instantiate(prefab_decimal, spawnBlockToTheLeft(), Quaternion.identity);
-        IntegerVariableBlock type = temp.AddComponent<IntegerVariableBlock>();
-        type.SetValue(".");
+        DecimalBlock type = temp.AddComponent<DecimalBlock>();
     }
-    
+
 }

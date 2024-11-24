@@ -1,24 +1,23 @@
 using UnityEngine;
 
-public class FloatVariableBlock : VariableBlock
+public class FloatVariableBlock : VarTypeBlock
 {
     private void Start()
     {
         base.Start();
         VariableType = VariableType.Float;
-        Value = "0.00";
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning Float Variable Block with default value: " + Value);
+        Debug.Log("Spawning Float VarType Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting Float Variable Block");
+        Debug.Log("Deleting Float VarType Block");
     }
 }
