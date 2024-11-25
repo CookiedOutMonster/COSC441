@@ -1,23 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class BooleanVariableBlock : VarTypeBlock
+public class EightBlock : NumberBlock
 {
     private void Start()
     {
         base.Start();
-        VariableType = VariableType.Boolean;
+        Number = Number.Eight;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning Boolean VarType Block");
+        Debug.Log("Spawning 8 Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting Boolean VarType Block");
+        Debug.Log("Deleting 8 Block");
     }
 }

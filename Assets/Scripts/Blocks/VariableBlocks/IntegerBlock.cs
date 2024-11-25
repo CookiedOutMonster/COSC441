@@ -1,26 +1,25 @@
 using UnityEngine;
 
-public class IntegerVariableBlock : VariableBlock
+public class IntegerVariableBlock : VarTypeBlock
 {
     private void Start()
     {
         base.Start();
         VariableType = VariableType.Integer;
-        // Value = "0";
         Spawn();
     }
 
- 
+
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning Integer Variable Block with default value: " + Value);
+        Debug.Log("Spawning Integer VarType Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting Integer Variable Block");
+        Debug.Log("Deleting Integer VarType Block");
     }
 }

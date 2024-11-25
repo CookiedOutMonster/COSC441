@@ -44,7 +44,8 @@ public class StudyBehavior : MonoBehaviour
     "FeedbackType",
     "ResponseTime",
     "IncorrectSubmissions",
-    "ProblemDifficulty"
+    "ProblemDifficulty",
+    "Skipped"
     };
 
 
@@ -204,7 +205,7 @@ public class StudyBehavior : MonoBehaviour
         CSVManager.AppendToCSV(header);
     }
 
-    public void LogData(int totalErrors)
+    public void LogData(int totalErrors, bool hasFailed)
     {
         hasStarted = false; // Stop the timer
 
@@ -213,7 +214,8 @@ public class StudyBehavior : MonoBehaviour
             studySettings.feedbackType.ToString(),
             trialTimer.ToString(), // Use the tracked trial timer
             totalErrors.ToString(),
-            DetermineProblemDifficulty() // Use previous trial index
+            DetermineProblemDifficulty(), // Use previous trial index
+            hasFailed.ToString()
         };
 
         CSVManager.AppendToCSV(data);

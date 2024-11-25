@@ -1,29 +1,22 @@
 using UnityEngine;
 
-     public enum VariableType
-    {
-        Boolean,
-        Float,
-        Integer,
-        String
-    }
-public abstract class VariableBlock : Block
+public enum VariableType
+{
+    Boolean,
+    Float,
+    Integer,
+    String
+}
+public abstract class VarTypeBlock : Block
 {
     // Properties for variable block; set in derived classes
-    public string Value { get; protected set; }
+    // A VarTypeBlock does NOT store values, it only sets type; a different block altogether is used to represent actual value
     public VariableType VariableType { get; protected set; }
 
     protected void Start()
     {
         base.Start();
-        Type = BlockType.VariableBlock;
-
-        
-    }
-    // Method to set the value
-    public void SetValue(string newValue)
-    {
-        Value = newValue;
+        Type = BlockType.VarTypeBlock;
     }
 
     public override void Spawn()

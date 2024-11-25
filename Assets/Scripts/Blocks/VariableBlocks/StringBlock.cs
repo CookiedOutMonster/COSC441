@@ -1,19 +1,18 @@
 using UnityEngine;
 
-public class StringVariableBlock : VariableBlock
+public class StringVariableBlock : VarTypeBlock
 {
     private void Start()
     {
         base.Start();
         VariableType = VariableType.String;
-        Value = "null";
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning String Variable Block with default value: " + Value);
+        Debug.Log("Spawning String VarType Block");
     }
 
     public override void Delete()

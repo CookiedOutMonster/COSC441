@@ -1,23 +1,25 @@
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 
-public class BooleanVariableBlock : VarTypeBlock
+public class TrueBlock : TrueFalseBlock
 {
     private void Start()
     {
         base.Start();
-        VariableType = VariableType.Boolean;
+        Value Value = Value.True;
         Spawn();
     }
 
     public override void Spawn()
     {
         base.Spawn();
-        Debug.Log("Spawning Boolean VarType Block");
+        Debug.Log("Spawning True Block");
     }
 
     public override void Delete()
     {
         base.Delete();
-        Debug.Log("Deleting Boolean VarType Block");
+        Debug.Log("Deleting True Block");
     }
 }

@@ -43,7 +43,7 @@ public class Executor : MonoBehaviour
 
     // ~ for debugging ~ 
     private bool logStack = false;
-    private bool printErrors = false;
+    private bool printErrors = true;
     private bool spawnBlock = false;
 
 
@@ -76,15 +76,12 @@ public class Executor : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //Debug.Log(isProblemStarted);
         if (isProblemStarted == true && studyStatus == HAS_NOT_FINISHED_STUDY)
-        {
             ManageStudy();
-        }
+
         else if (studyStatus == FINISHED_STUDY)
-        {
             ShowFinishedScreen();
-        }
+
     }
 
     private void ManageStudy()
@@ -110,6 +107,7 @@ public class Executor : MonoBehaviour
     }
 
     // Method to show the appropriate screen (Interpit or Compile) based on feedback type
+    // uses a boolean flag to ensure the screen is only switched once
     private void whichScreen(string screen)
     {
         // Execute a single time
@@ -128,8 +126,17 @@ public class Executor : MonoBehaviour
 
     public void CompileButton()
     {
+        // on button press, check if the answer is correct
         CheckAndLogErrors();
+        // listener for if the button is correct
         OnCorrect();
+    }
+
+
+    public void SkipButton()
+    {
+        bool hasFailed = true;
+        HandleSolution(hasFailed);
     }
 
     public void SubmitImmediateFeedback() // *this is a button*
@@ -140,7 +147,7 @@ public class Executor : MonoBehaviour
     // Helper method to check blocks on board and update total errors
     private void CheckAndLogErrors()
     {
-        int errors = 0; // glitch with errors needs fixing
+        int errors = 0;
 
         // Check blocks on the board
         this.isCorrect = compare.checkBlocksOnBoard(this.userStack, ref errors);
@@ -153,7 +160,8 @@ public class Executor : MonoBehaviour
         {
             if (totalErrors > 0)
             {
-                Debug.Log(totalErrors);
+                //Debug.Log(totalErrors);
+                Debug.Log("this is errors" + this.totalErrors);
             }
             if (isCorrect)
             {
@@ -170,10 +178,10 @@ public class Executor : MonoBehaviour
             return;
         }
 
-        HandleCorrectSolution();
+        HandleSolution();
     }
 
-    private void HandleCorrectSolution()
+    private void HandleSolution(bool hasFailed = false)
     {
         // Stop the Update loop
         isProblemStarted = false;
@@ -186,7 +194,7 @@ public class Executor : MonoBehaviour
 
         // Show success screen and cleanup
         ShowCorrectNextScreen();
-        std.LogData(totalErrors);
+        std.LogData(this.totalErrors, hasFailed);
         shelf.DeleteDetectedBlocks();
         totalErrors = 0;
         HideBlockSpawner();
@@ -343,8 +351,6 @@ public class Executor : MonoBehaviour
         if (interpit != null)
         {
             interpit.SetActive(true);
-            Debug.Log("we got here boys and squirrels" + interpit.activeSelf);
-
         }
     }
 
