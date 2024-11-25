@@ -8,7 +8,7 @@ public class Compare : MonoBehaviour
 {
 
     // ~ for debugging 
-    private bool printErrors = false;
+    private bool printErrors = true;
 
     // used for interpit 
     private Stack<GameObject> lastVerifiedStack = null;

@@ -59,7 +59,7 @@ public class StudyBehavior : MonoBehaviour
     {
         //LogHeader(); //logs above header for data
         CreateBlock(); //creates data block
-        LogHeader();
+        //LogHeader();
 
 
 

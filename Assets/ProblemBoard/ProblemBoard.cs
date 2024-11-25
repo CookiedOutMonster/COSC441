@@ -100,8 +100,8 @@ public class ProblemBoard : MonoBehaviour
     // Start is called before the first frame update
     void Awake()
     {
-        readProblemsFromTextFile();
-        //InitializeProblems();
+        //readProblemsFromTextFile();
+        InitializeProblems();
     }
 
     // Update is called once per frame
