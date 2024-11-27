@@ -13,7 +13,6 @@ public abstract class AssignmentBlock : Block
     {
         base.Start();
         Type = BlockType.AssignmentBlock;
-        Correct();
     }
 
     public override void Spawn()

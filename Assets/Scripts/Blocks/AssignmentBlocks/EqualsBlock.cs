@@ -8,7 +8,8 @@ public class EqualsBlock : AssignmentBlock
         base.Start();
         AssignmentType = AssignmentType.Equals;
         Spawn();
-    }public override void Spawn()
+    }
+    public override void Spawn()
     {
         base.Spawn();
         Debug.Log("Spawning Equals Assignment Block");

@@ -1,3 +1,4 @@
+
 using System.Collections;
 using UnityEditor;
 using UnityEngine;
@@ -31,74 +32,141 @@ public interface IBlock
     void Delete();
 }
 
-// Abstract base class for all block types
 public abstract class Block : MonoBehaviour, IBlock
 {
     public BlockType Type { get; protected set; }
-    private MeshRenderer blockRenderer;
-    private AudioSource audioSource;
 
-    public string correctSoundPath = "Audio/CorrectSound"; // Path to the correct sound in Resources/Audio
-    public string falseSoundPath = "Audio/FalseSound";     // Path to the false sound in Resources/Audio
+    private MeshRenderer meshRenderer;
+    private Material ogMaterial;
+    private Material correctMaterial;
+    private Material incorrectMaterial;
+
+    private string correctMaterialPath = "Material/Correct";
+    private string incorrectMaterialPath = "Material/Incorrect";
+
+    private bool printErrors = false;
+
+    private AudioSource audioSource;
+    public string correctSoundPath = "Audio/CorrectSound";
+    public string falseSoundPath = "Audio/FalseSound";
 
     private AudioClip correctSound;
     private AudioClip falseSound;
 
+    private GameObject markObject;
+    private TextMesh textMesh;
+    private Vector3 markOffset = new Vector3(0, 0.4f, 0); // Offset from block position
+
+    protected void Awake()
+    {
+        meshRenderer = gameObject.GetComponent<MeshRenderer>();
+        ogMaterial = meshRenderer.material;
+        correctMaterial = Resources.Load<Material>(correctMaterialPath);
+        incorrectMaterial = Resources.Load<Material>(incorrectMaterialPath);
+
+        // Create validation mark as an independent GameObject
+        markObject = new GameObject("ValidationMark_" + gameObject.name);
+        textMesh = markObject.AddComponent<TextMesh>();
+        textMesh.alignment = TextAlignment.Center;
+        textMesh.anchor = TextAnchor.MiddleCenter;
+        textMesh.fontSize = 100;
+        textMesh.characterSize = 0.05f;
+
+        // Position the mark
+        UpdateMarkPosition();
+
+        // Add billboard effect to always face camera
+        markObject.AddComponent<Billboard>();
+
+        markObject.SetActive(false);
+    }
+
+    private void UpdateMarkPosition()
+    {
+        if (markObject != null)
+        {
+            markObject.transform.position = transform.position + markOffset;
+        }
+    }
+
+    private void LateUpdate()
+    {
+        UpdateMarkPosition();
+    }
+
     protected void Start()
     {
-        blockRenderer = GetComponent<MeshRenderer>();
+        /*
         audioSource = GetComponent<AudioSource>();
-
-        if (blockRenderer == null)
-        {
-            Debug.LogError("MeshRenderer component not found on the GameObject.");
-        }
-
-        if (audioSource == null)
-        {
+        
+        if (audioSource == null) {
             Debug.LogError("AudioSource component not found on the GameObject.");
         }
-
         // Load audio clips from Resources/Audio
         correctSound = Resources.Load<AudioClip>(correctSoundPath);
         falseSound = Resources.Load<AudioClip>(falseSoundPath);
-
-        if (correctSound == null)
-        {
+        
+        if (correctSound == null) {
             Debug.LogError("Correct sound not found at path: " + correctSoundPath);
         }
-
-        if (falseSound == null)
-        {
+        
+        if (falseSound == null) {
             Debug.LogError("False sound not found at path: " + falseSoundPath);
         }
+        */
     }
 
-    public void Correct()
+    public void Validate(bool isCorrect)
     {
-        if (blockRenderer != null)
+        Material whichMaterial = isCorrect ? correctMaterial : incorrectMaterial;
+
+        if (printErrors)
+            Debug.Log("this was called " + meshRenderer + " plus the supposed material " + ogMaterial);
+
+        //ChangeColor(whichMaterial);
+        ShowValidationMark(isCorrect);
+    }
+
+    private void ShowValidationMark(bool isCorrect)
+    {
+        if (markObject != null)
         {
-            StartCoroutine(ChangeColorTemporarily(Color.green, 0.5f));
-            PlaySound(correctSound);
+            textMesh.text = isCorrect ? "✓" : "X";
+            textMesh.color = isCorrect ? Color.green : Color.red;
+            markObject.SetActive(true);
         }
     }
 
-    public void False()
+    private void ChangeColor(Material material)
     {
-        if (blockRenderer != null)
+        meshRenderer.material = material;
+
+        if (material == incorrectMaterial)
+            meshRenderer.material.color = Color.red;
+
+        if (printErrors)
+            Debug.Log("Block color set to " + material);
+    }
+
+    public void ResetMaterial()
+    {
+        if (meshRenderer != null)
         {
-            StartCoroutine(ChangeColorTemporarily(Color.red, 1f));
-            PlaySound(falseSound);
+            meshRenderer.material = ogMaterial;
+        }
+        if (markObject != null)
+        {
+            markObject.SetActive(false);
         }
     }
 
-    private IEnumerator ChangeColorTemporarily(Color color, float duration)
+    private void OnDestroy()
     {
-        blockRenderer.material.SetColor("_BaseColor", color);
-        Debug.Log("Block color set to " + color.ToString() + " for " + duration + " seconds.");
-        yield return new WaitForSeconds(duration);
-        blockRenderer.material.SetColor("_BaseColor", Color.white);
-        Debug.Log("Block color reset to default.");
+        // Clean up the mark object when the block is destroyed
+        if (markObject != null)
+        {
+            Destroy(markObject);
+        }
     }
 
     private void PlaySound(AudioClip clip)
@@ -111,4 +179,24 @@ public abstract class Block : MonoBehaviour, IBlock
 
     public abstract void Spawn();
     public abstract void Delete();
+}
+
+// Billboard script to make text face camera
+public class Billboard : MonoBehaviour
+{
+    private Camera mainCamera;
+
+    void Start()
+    {
+        mainCamera = Camera.main;
+    }
+
+    void LateUpdate()
+    {
+        if (mainCamera != null)
+        {
+            transform.LookAt(transform.position + mainCamera.transform.rotation * Vector3.forward,
+                           mainCamera.transform.rotation * Vector3.up);
+        }
+    }
 }

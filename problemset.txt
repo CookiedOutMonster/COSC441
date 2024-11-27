@@ -1,6 +1,6 @@
 5
 Check if 1 is less than 9
-IntegerVariableBlock, IntegerVariableBlock
+OneBlock, LessThanBlock, NineBlock
 Create an integer variable X and set it to 6
 IntegerVariableBlock, XBlock, EqualsBlock, SixBlock
 Create an integer B and set it to 4 times 2 plus 3

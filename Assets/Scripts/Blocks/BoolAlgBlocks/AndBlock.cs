@@ -13,7 +13,6 @@ public class AndBlock : BoolAlgBlock
     {
         base.Spawn();
         Debug.Log("Spawning AND Boolean Algebra Block");
-        False();
     }
 
     public override void Delete()
